@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sales & Revenue Reports (₹) | SavoryPulse India</title>
+    <meta name="description" content="Indian dining sales analysis, UPI tender breakdowns, guest checks, Petpooja reconciliation, and revenue growth telemetry." />
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              background: '#0b1326',
+              surface: '#0b1326',
+              'surface-container-lowest': '#060e20',
+              'surface-container-low': '#131b2e',
+              'surface-container': '#171f33',
+              'surface-container-high': '#222a3d',
+              'surface-container-highest': '#2d3449',
+              'on-surface': '#dae2fd',
+              outline: '#a08e7a',
+              primary: '#ffc174',
+              'primary-container': '#f59e0b',
+              secondary: '#4edea3',
+              tertiary: '#8ed5ff',
+              error: '#ffb4ab'
+            },
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+              display: ['Plus Jakarta Sans', 'sans-serif'],
+              mono: ['JetBrains Mono', 'monospace']
+            }
+          }
+        }
+      };
+    </script>
+    <style>
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background: #060e20;
+        color: #dae2fd;
+        font-family: 'Inter', sans-serif;
+      }
+      .font-display { font-family: 'Plus Jakarta Sans', sans-serif; }
+      .glass-card {
+        background: #131b2e;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      .input-cell {
+        background: #171f33;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        color: #dae2fd;
+        padding: 0.35rem 0.5rem;
+        border-radius: 0.5rem;
+        font-size: 0.75rem;
+        outline: none;
+      }
+      .input-cell:focus {
+        border-color: #f59e0b;
+        box-shadow: 0 0 8px rgba(245, 158, 11, 0.25);
+      }
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+    </style>
+  </head>
+  <body class="min-h-screen antialiased flex flex-col selection:bg-primary-container selection:text-on-primary">
+    
+    <!-- HEADER -->
+    <header class="bg-surface-container-lowest border-b border-white/5 px-4 py-3 flex items-center justify-between sticky top-0 z-40">
+      
+      <!-- Brand & Title -->
+      <div class="flex items-center gap-3.5">
+        <a href="index.html" class="flex items-center gap-2.5 group">
+          <div class="h-9 w-9 rounded-xl bg-gradient-to-br from-amber-300 via-primary-container to-amber-600 text-slate-950 flex items-center justify-center font-bold shadow-[0_0_14px_rgba(245,158,11,0.4)]">
+            <span class="material-symbols-outlined text-xl">restaurant</span>
+          </div>
+          <div>
+            <div class="font-display text-sm font-extrabold text-white tracking-tight leading-none group-hover:text-primary transition">SavoryPulse</div>
+            <div class="text-[9px] uppercase tracking-wider text-outline font-semibold leading-none mt-1">Sales &amp; Revenue Reports (₹)</div>
+          </div>
+        </a>
+
+        <div class="h-5 w-px bg-white/10 mx-1 hidden sm:block"></div>
+
+        <!-- Navigation Links -->
+        <nav class="hidden md:flex items-center gap-1 text-xs">
+          <a href="index.html" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-surface-container transition">Overview</a>
+          <a href="dispatch.html" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-surface-container transition">Live Dispatch</a>
+          <a href="analytics.html" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-surface-container transition">Analytics (₹)</a>
+          <a href="inventory.html" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-surface-container transition">Inventory</a>
+          <a href="menu.html" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-surface-container transition">Digital Menu</a>
+          <a href="sales.html" class="px-3 py-1.5 rounded-lg bg-sky-500/20 text-sky-300 border border-sky-500/30 font-bold flex items-center gap-1">
+            <span class="material-symbols-outlined text-base text-sky-400">payments</span>
+            <span>Sales (₹)</span>
+          </a>
+          <a href="admin.html" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-surface-container transition flex items-center gap-1">
+            <span class="material-symbols-outlined text-sm">tune</span>
+            <span>Data Control Panel</span>
+          </a>
+        </nav>
+      </div>
+
+      <!-- Action Cluster -->
+      <div class="flex items-center gap-2.5">
+        <button onclick="openAddBillModal()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-surface-container hover:bg-primary hover:text-slate-950 text-xs font-bold text-slate-200 transition">
+          <span class="material-symbols-outlined text-base text-primary">add_circle</span>
+          <span>+ Add Option (Bill)</span>
+        </button>
+        <button onclick="saveAllSalesModifications()" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-secondary text-slate-950 text-xs font-extrabold shadow-sm hover:brightness-110 transition">
+          <span class="material-symbols-outlined text-base font-bold">save</span>
+          <span>Save All Changes</span>
+        </button>
+        <button onclick="downloadCsv()" class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-surface-container hover:bg-surface-bright text-slate-300 text-xs font-semibold">
+          <span class="material-symbols-outlined text-base text-tertiary">table_view</span>
+          <span>CSV</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- CONTENT WRAPPER -->
+    <main class="flex-1 max-w-[1600px] w-full mx-auto p-4 sm:p-6 space-y-6">
+      
+      <!-- TOP OVERVIEW METRICS (INDIAN RUPEES) -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+        
+        <div class="glass-card rounded-2xl p-5 flex flex-col justify-between">
+          <div class="flex items-center justify-between text-xs text-outline font-semibold">
+            <span>GROSS SALES TODAY</span>
+            <span class="material-symbols-outlined text-amber-300">currency_rupee</span>
+          </div>
+          <div class="mt-3 flex items-baseline gap-2">
+            <span class="font-display text-3xl font-black text-amber-300 font-mono" id="metricGrossSales">₹2,84,500</span>
+            <span class="text-xs font-bold text-secondary font-mono">+18.2% vs avg</span>
+          </div>
+          <div class="mt-3 text-[11px] text-slate-400" id="metricCheckCount">420 dishes served across 84 guest checks</div>
+        </div>
+
+        <div class="glass-card rounded-2xl p-5 flex flex-col justify-between">
+          <div class="flex items-center justify-between text-xs text-outline font-semibold">
+            <span>AVERAGE CHECK SIZE</span>
+            <span class="material-symbols-outlined text-primary">receipt</span>
+          </div>
+          <div class="mt-3 flex items-baseline gap-2">
+            <span class="font-display text-3xl font-black text-white font-mono" id="metricAvgCheck">₹3,420</span>
+            <span class="text-xs font-bold text-secondary font-mono">+₹240</span>
+          </div>
+          <div class="mt-3 text-[11px] text-slate-400">Dine-in: ₹4,250 · Delivery: ₹1,480</div>
+        </div>
+
+        <div class="glass-card rounded-2xl p-5 flex flex-col justify-between">
+          <div class="flex items-center justify-between text-xs text-outline font-semibold">
+            <span>TIPS REALIZED</span>
+            <span class="material-symbols-outlined text-emerald-400">volunteer_activism</span>
+          </div>
+          <div class="mt-3 flex items-baseline gap-2">
+            <span class="font-display text-3xl font-black text-emerald-400 font-mono" id="metricTips">₹28,400</span>
+            <span class="text-xs font-bold text-secondary font-mono">15.2% avg</span>
+          </div>
+          <div class="mt-3 text-[11px] text-slate-400">Disbursed directly to stewards &amp; ustads</div>
+        </div>
+
+        <div class="glass-card rounded-2xl p-5 flex flex-col justify-between">
+          <div class="flex items-center justify-between text-xs text-outline font-semibold">
+            <span>GST &amp; SERVICE CHARGE</span>
+            <span class="material-symbols-outlined text-sky-400">percent</span>
+          </div>
+          <div class="mt-3 flex items-baseline gap-2">
+            <span class="font-display text-3xl font-black text-white font-mono" id="metricTaxes">₹28,450</span>
+            <span class="text-xs font-bold text-secondary font-mono">5% GST + 5% SC</span>
+          </div>
+          <div class="mt-3 text-[11px] text-slate-400">Automated ledger via Petpooja &amp; Tally</div>
+        </div>
+
+      </div>
+
+      <!-- PAYMENT METHODS & TENDER BREAKDOWN -->
+      <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+        
+        <div class="glass-card rounded-[28px] p-6 space-y-4">
+          <div class="flex items-center justify-between">
+            <h3 class="font-display text-lg font-bold text-white">Tender / Payment Mix</h3>
+            <span class="text-xs font-mono text-outline">100% Reconciled</span>
+          </div>
+
+          <div class="space-y-3 text-xs">
+            <div class="p-3 rounded-xl bg-surface-container flex items-center justify-between">
+              <div class="flex items-center gap-2.5">
+                <span class="material-symbols-outlined text-primary text-lg">qr_code_scanner</span>
+                <span class="font-semibold text-white">UPI (PhonePe, GPay, Paytm)</span>
+              </div>
+              <span class="font-mono font-bold text-emerald-400" id="mixUpi">₹1,56,400 (55%)</span>
+            </div>
+
+            <div class="p-3 rounded-xl bg-surface-container flex items-center justify-between">
+              <div class="flex items-center gap-2.5">
+                <span class="material-symbols-outlined text-sky-400 text-lg">credit_card</span>
+                <span class="font-semibold text-white">Pine Labs (Visa / RuPay / MC)</span>
+              </div>
+              <span class="font-mono font-bold text-white" id="mixCard">₹99,500 (35%)</span>
+            </div>
+
+            <div class="p-3 rounded-xl bg-surface-container flex items-center justify-between">
+              <div class="flex items-center gap-2.5">
+                <span class="material-symbols-outlined text-emerald-400 text-lg">attach_money</span>
+                <span class="font-semibold text-white">Cash In Drawer</span>
+              </div>
+              <span class="font-mono font-bold text-white" id="mixCash">₹28,600 (10%)</span>
+            </div>
+          </div>
+
+          <div class="mt-4 pt-3 border-t border-white/5 text-xs text-outline flex items-center justify-between">
+            <span>Instant UPI Settlement: <strong>Active</strong></span>
+            <span class="text-secondary font-bold font-mono">0% MDR on RuPay/UPI</span>
+          </div>
+        </div>
+
+        <!-- RECENT TRANSACTIONS / CHECKS (2 cols) -->
+        <div class="xl:col-span-2 glass-card rounded-[28px] p-6 space-y-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="font-display text-lg font-bold text-white">Closed Guest Bills &amp; Online Orders</h3>
+              <p class="text-xs text-slate-400">Directly edit values or add new checks to the live Petpooja stream.</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <button onclick="toggleSalesEditMode()" id="salesEditBtn" class="px-3 py-1 rounded-full bg-surface-container hover:bg-surface-bright text-xs text-white border border-white/10 flex items-center gap-1">
+                <span class="material-symbols-outlined text-sm">edit</span>
+                <span id="salesEditText">Quick Edit Bills</span>
+              </button>
+              <button onclick="openAddBillModal()" class="px-3.5 py-1.5 rounded-xl bg-primary text-slate-950 text-xs font-bold hover:brightness-110 flex items-center gap-1">
+                <span class="material-symbols-outlined text-sm">add</span>
+                <span>+ Add Bill</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs font-sans">
+              <thead>
+                <tr class="border-b border-white/5 text-[11px] uppercase tracking-wider text-outline font-mono">
+                  <th class="pb-2.5">Bill #</th>
+                  <th class="pb-2.5">Table / Source</th>
+                  <th class="pb-2.5">Captain</th>
+                  <th class="pb-2.5 text-center">Items</th>
+                  <th class="pb-2.5 text-right">Total (₹)</th>
+                  <th class="pb-2.5 text-right">Tip (₹)</th>
+                  <th class="pb-2.5">Payment Method</th>
+                  <th class="pb-2.5 text-right">Action</th>
+                </tr>
+              </thead>
+              <tbody id="salesChecksTbody" class="divide-y border-white/5 font-mono"></tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+
+    <!-- MODAL: ADD BILL OPTION -->
+    <div id="addBillModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+      <div class="bg-surface-container border border-white/10 rounded-2xl w-full max-w-md p-6 shadow-2xl">
+        <div class="flex items-center justify-between pb-3 border-b border-white/10">
+          <h3 class="font-display text-lg font-bold text-white flex items-center gap-2">
+            <span class="material-symbols-outlined text-secondary">receipt</span>
+            Add New Bill / Sale Check (₹)
+          </h3>
+          <button onclick="closeAddBillModal()" class="text-outline hover:text-white">
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </div>
+
+        <form onsubmit="handleCreateBill(event)" class="mt-4 space-y-3.5 text-xs">
+          <div>
+            <label class="block text-outline font-semibold mb-1">Table / Order Channel</label>
+            <input type="text" id="billModalTable" required placeholder="Table 16 / Zomato" class="input-cell w-full text-xs font-bold" />
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-outline font-semibold mb-1">Captain Name</label>
+              <input type="text" id="billModalCaptain" value="Ramesh S." class="input-cell w-full text-xs" />
+            </div>
+            <div>
+              <label class="block text-outline font-semibold mb-1">Items Count</label>
+              <input type="number" id="billModalItems" value="4" class="input-cell w-full text-xs text-center" />
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-outline font-semibold mb-1">Total Amount in ₹</label>
+              <input type="number" id="billModalTotal" required placeholder="3500" class="input-cell w-full text-xs font-mono font-bold text-amber-300" />
+            </div>
+            <div>
+              <label class="block text-outline font-semibold mb-1">Tip (₹)</label>
+              <input type="number" id="billModalTip" value="400" class="input-cell w-full text-xs font-mono font-bold text-emerald-400" />
+            </div>
+          </div>
+          <div>
+            <label class="block text-outline font-semibold mb-1">Payment Method</label>
+            <select id="billModalMethod" class="input-cell w-full text-xs">
+              <option value="UPI (PhonePe)">UPI (PhonePe)</option>
+              <option value="UPI (GPay)">UPI (GPay)</option>
+              <option value="Pine Labs Card">Pine Labs Card</option>
+              <option value="Cash">Cash</option>
+            </select>
+          </div>
+          <div class="pt-3 flex items-center justify-end gap-2.5">
+            <button type="button" onclick="closeAddBillModal()" class="px-4 py-2 rounded-xl bg-surface-container-high text-slate-300 font-semibold hover:text-white">Cancel</button>
+            <button type="submit" class="px-5 py-2 rounded-xl bg-primary text-slate-950 font-bold shadow-md hover:brightness-110">+ Add &amp; Save Bill</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- TOAST CONTAINER -->
+    <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <script src="assets/data.js"></script>
+    <script>
+      let salesData = DB.getSales();
+      let isSalesEditMode = false;
+
+      function toggleSalesEditMode() {
+        isSalesEditMode = !isSalesEditMode;
+        document.getElementById('salesEditText').textContent = isSalesEditMode ? 'Exit Edit Mode' : 'Quick Edit Bills';
+        document.getElementById('salesEditBtn').className = isSalesEditMode ? 
+          'px-3 py-1 rounded-full bg-primary text-slate-950 font-bold text-xs flex items-center gap-1 shadow-sm' : 
+          'px-3 py-1 rounded-full bg-surface-container hover:bg-surface-bright text-xs text-white border border-white/10 flex items-center gap-1';
+        renderSales();
+      }
+
+      function renderSales() {
+        document.getElementById('metricGrossSales').textContent = `₹${salesData.todayGross.toLocaleString('en-IN')}`;
+        document.getElementById('metricAvgCheck').textContent = `₹${salesData.avgCheck.toLocaleString('en-IN')}`;
+        document.getElementById('metricTips').textContent = `₹${salesData.tipsRealized.toLocaleString('en-IN')}`;
+        document.getElementById('metricTaxes').textContent = `₹${Math.round(salesData.todayGross * 0.1).toLocaleString('en-IN')}`;
+        document.getElementById('metricCheckCount').textContent = `420 dishes served across ${salesData.checks.length} guest checks`;
+
+        const tbody = document.getElementById('salesChecksTbody');
+        tbody.innerHTML = '';
+
+        salesData.checks.forEach((chk, idx) => {
+          const tr = document.createElement('tr');
+          tr.className = 'hover:bg-surface-container/40';
+
+          if (isSalesEditMode) {
+            tr.innerHTML = `
+              <td class="py-2 text-white font-bold text-xs">${chk.id}</td>
+              <td class="py-2">
+                <input type="text" value="${chk.table}" data-idx="${idx}" data-field="table" class="input-cell w-36 text-xs text-white font-semibold" />
+              </td>
+              <td class="py-2">
+                <input type="text" value="${chk.captain}" data-idx="${idx}" data-field="captain" class="input-cell w-32 text-xs text-slate-300" />
+              </td>
+              <td class="py-2 text-center">
+                <input type="number" value="${chk.itemsCount}" data-idx="${idx}" data-field="itemsCount" class="input-cell w-16 text-center text-xs" />
+              </td>
+              <td class="py-2 text-right">
+                <input type="number" value="${chk.total}" data-idx="${idx}" data-field="total" class="input-cell w-24 text-right font-bold text-amber-300 text-xs" />
+              </td>
+              <td class="py-2 text-right">
+                <input type="number" value="${chk.tip}" data-idx="${idx}" data-field="tip" class="input-cell w-20 text-right font-bold text-emerald-400 text-xs" />
+              </td>
+              <td class="py-2">
+                <input type="text" value="${chk.method}" data-idx="${idx}" data-field="method" class="input-cell w-32 text-xs" />
+              </td>
+              <td class="py-2 text-right">
+                <button onclick="deleteBill(${idx})" class="p-1 text-outline hover:text-rose-400" title="Delete">
+                  <span class="material-symbols-outlined text-base">delete</span>
+                </button>
+              </td>
+            `;
+          } else {
+            tr.innerHTML = `
+              <td class="py-2.5 text-white font-bold">${chk.id}</td>
+              <td class="py-2.5 text-slate-300 font-sans">${chk.table}</td>
+              <td class="py-2.5 text-slate-400 font-sans">${chk.captain}</td>
+              <td class="py-2.5 text-right text-white">${chk.itemsCount}</td>
+              <td class="py-2.5 text-right font-bold text-amber-300 font-sans">₹${chk.total.toLocaleString('en-IN')}</td>
+              <td class="py-2.5 text-right text-emerald-400 font-sans">₹${chk.tip.toLocaleString('en-IN')}</td>
+              <td class="py-2.5 text-slate-300 font-sans">${chk.method}</td>
+              <td class="py-2.5 text-right"><span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-bold">${chk.status || 'Paid'}</span></td>
+            `;
+          }
+          tbody.appendChild(tr);
+        });
+      }
+
+      function deleteBill(idx) {
+        salesData.checks.splice(idx, 1);
+        DB.saveSales(salesData);
+        renderSales();
+        showToast('Bill check removed from ledger', 'info');
+      }
+
+      function saveAllSalesModifications() {
+        if (isSalesEditMode) {
+          document.querySelectorAll('[data-field]').forEach(input => {
+            const idx = parseInt(input.getAttribute('data-idx'));
+            const field = input.getAttribute('data-field');
+            if (salesData.checks[idx]) {
+              if (field === 'total' || field === 'tip' || field === 'itemsCount') {
+                salesData.checks[idx][field] = parseFloat(input.value) || 0;
+              } else {
+                salesData.checks[idx][field] = input.value;
+              }
+            }
+          });
+          // Recalculate totals
+          let total = 0, tips = 0;
+          salesData.checks.forEach(c => { total += c.total; tips += c.tip; });
+          salesData.todayGross = total;
+          salesData.tipsRealized = tips;
+          salesData.avgCheck = Math.round(total / (salesData.checks.length || 1));
+        }
+        DB.saveSales(salesData);
+        showToast('💾 Saved All Sales & Bills to Database!', 'success');
+        renderSales();
+      }
+
+      function openAddBillModal() { document.getElementById('addBillModal').classList.remove('hidden'); }
+      function closeAddBillModal() { document.getElementById('addBillModal').classList.add('hidden'); }
+
+      function handleCreateBill(e) {
+        e.preventDefault();
+        const check = {
+          table: document.getElementById('billModalTable').value,
+          captain: document.getElementById('billModalCaptain').value || 'Captain',
+          itemsCount: parseInt(document.getElementById('billModalItems').value) || 4,
+          total: parseFloat(document.getElementById('billModalTotal').value) || 0,
+          tip: parseFloat(document.getElementById('billModalTip').value) || 0,
+          method: document.getElementById('billModalMethod').value,
+          status: 'Paid'
+        };
+        DB.addCheck(check);
+        salesData = DB.getSales();
+        closeAddBillModal();
+        renderSales();
+        showToast(`Added bill of ₹${check.total} to sales!`, 'success');
+      }
+
+      function downloadCsv() {
+        let csvContent = "data:text/csv;charset=utf-8,Bill_ID,Table,Captain,Items,Total_INR,Tip_INR,Method\n";
+        salesData.checks.forEach(c => {
+          csvContent += `${c.id},"${c.table}","${c.captain}",${c.itemsCount},${c.total},${c.tip},"${c.method}"\n`;
+        });
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", "SavoryPulse_Sales_Ledger.csv");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        showToast('Downloaded SavoryPulse_Sales_Ledger.csv', 'success');
+      }
+
+      renderSales();
+
+      function showToast(message, type = 'success') {
+        const container = document.getElementById('toastContainer');
+        const toast = document.createElement('div');
+        const colorClass = type === 'success' ? 'border-emerald-500/40 text-emerald-300' :
+                           type === 'warning' ? 'border-amber-500/40 text-amber-300' : 'border-sky-500/40 text-sky-300';
+        
+        toast.className = `p-3 rounded-xl bg-surface-container-high/95 backdrop-blur-md border ${colorClass} shadow-xl text-xs font-semibold flex items-center gap-2 pointer-events-auto transform transition-all duration-300 translate-y-3 opacity-0`;
+        toast.innerHTML = `
+          <span class="material-symbols-outlined text-base">${type === 'success' ? 'check_circle' : 'info'}</span>
+          <span>${message}</span>
+        `;
+        container.appendChild(toast);
+
+        setTimeout(() => toast.classList.remove('translate-y-3', 'opacity-0'), 10);
+        setTimeout(() => {
+          toast.classList.add('translate-y-3', 'opacity-0');
+          setTimeout(() => toast.remove(), 300);
+        }, 3000);
+      }
+    </script>
+  </body>
+</html>

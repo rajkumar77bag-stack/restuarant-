@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Inventory & Stock Intelligence (₹) | SavoryPulse India</title>
+    <meta name="description" content="Cold storage, dairy, spice vault forecasting, automatic 86 dish lockout, par level compliance, and supplier purchase orders in Indian Rupees." />
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              background: '#0b1326',
+              surface: '#0b1326',
+              'surface-container-lowest': '#060e20',
+              'surface-container-low': '#131b2e',
+              'surface-container': '#171f33',
+              'surface-container-high': '#222a3d',
+              'surface-container-highest': '#2d3449',
+              'on-surface': '#dae2fd',
+              'on-surface-variant': '#d8c3ad',
+              outline: '#a08e7a',
+              primary: '#ffc174',
+              'primary-container': '#f59e0b',
+              secondary: '#4edea3',
+              'secondary-container': '#00a572',
+              tertiary: '#8ed5ff',
+              error: '#ffb4ab',
+              'error-container': '#93000a'
+            },
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+              display: ['Plus Jakarta Sans', 'sans-serif'],
+              mono: ['JetBrains Mono', 'monospace']
+            }
+          }
+        }
+      };
+    </script>
+    <style>
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background: #060e20;
+        color: #dae2fd;
+        font-family: 'Inter', sans-serif;
+      }
+      .font-display { font-family: 'Plus Jakarta Sans', sans-serif; }
+      .glass-card {
+        background: #131b2e;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      .input-cell {
+        background: #171f33;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        color: #dae2fd;
+        padding: 0.35rem 0.5rem;
+        border-radius: 0.5rem;
+        font-size: 0.75rem;
+        outline: none;
+      }
+      .input-cell:focus {
+        border-color: #f59e0b;
+        box-shadow: 0 0 8px rgba(245, 158, 11, 0.25);
+      }
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+    </style>
+  </head>
+  <body class="min-h-screen antialiased flex flex-col selection:bg-primary-container selection:text-on-primary">
+    
+    <!-- HEADER -->
+    <header class="bg-surface-container-lowest border-b border-white/5 px-4 py-3 flex items-center justify-between sticky top-0 z-40">
+      
+      <!-- Brand & Title -->
+      <div class="flex items-center gap-3.5">
+        <a href="index.html" class="flex items-center gap-2.5 group">
+          <div class="h-9 w-9 rounded-xl bg-gradient-to-br from-amber-300 via-primary-container to-amber-600 text-slate-950 flex items-center justify-center font-bold shadow-[0_0_14px_rgba(245,158,11,0.4)]">
+            <span class="material-symbols-outlined text-xl">restaurant</span>
+          </div>
+          <div>
+            <div class="font-display text-sm font-extrabold text-white tracking-tight leading-none group-hover:text-primary transition">SavoryPulse</div>
+            <div class="text-[9px] uppercase tracking-wider text-outline font-semibold leading-none mt-1">Inventory Intelligence (₹)</div>
+          </div>
+        </a>
+
+        <div class="h-5 w-px bg-white/10 mx-1 hidden sm:block"></div>
+
+        <!-- Navigation Links -->
+        <nav class="hidden md:flex items-center gap-1 text-xs">
+          <a href="index.html" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-surface-container transition">Overview</a>
+          <a href="dispatch.html" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-surface-container transition">Live Dispatch</a>
+          <a href="analytics.html" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-surface-container transition">Analytics (₹)</a>
+          <a href="inventory.html" class="px-3 py-1.5 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/30 font-bold flex items-center gap-1">
+            <span class="material-symbols-outlined text-base text-amber-400">inventory_2</span>
+            <span>Inventory</span>
+          </a>
+          <a href="menu.html" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-surface-container transition">Digital Menu</a>
+          <a href="sales.html" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-surface-container transition">Sales (₹)</a>
+          <a href="admin.html" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-surface-container transition flex items-center gap-1">
+            <span class="material-symbols-outlined text-sm">tune</span>
+            <span>Data Control Panel</span>
+          </a>
+        </nav>
+      </div>
+
+      <!-- Action Cluster -->
+      <div class="flex items-center gap-2.5">
+        <button onclick="openAddSkuModal()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-surface-container hover:bg-primary hover:text-slate-950 text-xs font-bold text-slate-200 transition">
+          <span class="material-symbols-outlined text-base text-primary">add_circle</span>
+          <span>+ Add Option (SKU)</span>
+        </button>
+
+        <button onclick="saveAllInventoryModifications()" id="saveInventoryBtn" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-secondary text-slate-950 text-xs font-extrabold shadow-sm hover:brightness-110 transition">
+          <span class="material-symbols-outlined text-base font-bold">save</span>
+          <span>Save All Changes</span>
+        </button>
+
+        <button onclick="openPoModal()" class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-surface-container hover:bg-surface-bright text-slate-300 text-xs font-semibold">
+          <span class="material-symbols-outlined text-base text-primary">add_shopping_cart</span>
+          <span>Create PO</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- CONTENT WRAPPER -->
+    <main class="flex-1 max-w-[1600px] w-full mx-auto p-4 sm:p-6 space-y-6">
+      
+      <!-- BREADCRUMB & METRICS RIBBON -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <div class="text-xs uppercase tracking-wider text-outline font-semibold">Back of House Operations / Dairy, Spice Vault &amp; Cold Storage</div>
+          <h1 class="font-display text-2xl sm:text-3xl font-extrabold text-white mt-1">Inventory &amp; Stock Intelligence</h1>
+        </div>
+        <div class="flex items-center gap-2">
+          <span id="saveStatusIndicator" class="px-3 py-1 rounded-full bg-secondary-container/20 text-secondary text-xs font-bold flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+            Live Data Synced
+          </span>
+          <button onclick="toggleEditMode()" id="editModeToggleBtn" class="px-3 py-1 rounded-full bg-surface-container hover:bg-surface-bright text-xs text-white border border-white/10 flex items-center gap-1">
+            <span class="material-symbols-outlined text-sm">edit</span>
+            <span id="editModeText">Quick Edit Mode</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- INVENTORY METRICS SUMMARY (INDIAN RUPEES) -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+        
+        <div class="glass-card rounded-2xl p-5 flex flex-col justify-between">
+          <div class="flex items-center justify-between text-xs text-outline font-semibold">
+            <span>TOTAL TRACKED SKUS</span>
+            <span class="material-symbols-outlined text-primary">inventory_2</span>
+          </div>
+          <div class="mt-3 flex items-baseline gap-2">
+            <span class="font-display text-3xl font-black text-white" id="totalSkusMetric">184</span>
+            <span class="text-xs font-bold text-secondary font-mono">Audited</span>
+          </div>
+          <div class="w-full bg-surface-container-highest h-1.5 rounded-full mt-3 overflow-hidden">
+            <div class="bg-secondary h-full rounded-full" style="width: 98.4%;"></div>
+          </div>
+        </div>
+
+        <div class="glass-card rounded-2xl p-5 flex flex-col justify-between border-rose-500/30">
+          <div class="flex items-center justify-between text-xs text-rose-300 font-semibold">
+            <span>CRITICAL LOW STOCK (ALERT)</span>
+            <span class="material-symbols-outlined text-rose-400">warning</span>
+          </div>
+          <div class="mt-3 flex items-baseline gap-2">
+            <span class="font-display text-3xl font-black text-rose-400" id="lowStockCount">3 items</span>
+            <span class="text-xs font-bold text-rose-300 font-mono">Needs PO</span>
+          </div>
+          <div class="mt-3 text-[11px] text-slate-400">Ingredients nearing 86 lockout risk</div>
+        </div>
+
+        <div class="glass-card rounded-2xl p-5 flex flex-col justify-between">
+          <div class="flex items-center justify-between text-xs text-outline font-semibold">
+            <span>TOTAL STOCK VALUATION</span>
+            <span class="material-symbols-outlined text-emerald-400">account_balance_wallet</span>
+          </div>
+          <div class="mt-3 flex items-baseline gap-2">
+            <span class="font-display text-3xl font-black text-emerald-400 font-mono" id="stockValuationMetric">₹3,84,500</span>
+            <span class="text-xs font-bold text-secondary font-mono">+4.2% w/w</span>
+          </div>
+          <div class="mt-3 text-[11px] text-slate-400">Real-time cost valuation in Indian Rupees</div>
+        </div>
+
+        <div class="glass-card rounded-2xl p-5 flex flex-col justify-between">
+          <div class="flex items-center justify-between text-xs text-outline font-semibold">
+            <span>WASTE &amp; SPOILAGE RATIO</span>
+            <span class="material-symbols-outlined text-secondary">delete</span>
+          </div>
+          <div class="mt-3 flex items-baseline gap-2">
+            <span class="font-display text-3xl font-black text-white">1.8%</span>
+            <span class="text-xs font-bold text-secondary font-mono">Within target</span>
+          </div>
+          <div class="mt-3 text-[11px] text-slate-400">Saved ₹18,400 vs last month</div>
+        </div>
+
+      </div>
+
+      <!-- SKU DIRECTORY & CONTROLS -->
+      <div class="glass-card rounded-[28px] p-6 space-y-5">
+        
+        <!-- Controls & Category Filters -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          
+          <div class="flex flex-wrap items-center gap-1.5" id="skuCategoryGroup">
+            <button onclick="filterCategory('all')" data-cat="all" class="cat-btn px-3.5 py-1.5 rounded-xl bg-primary-container text-slate-950 font-bold text-xs">All SKUs</button>
+            <button onclick="filterCategory('dairy')" data-cat="dairy" class="cat-btn px-3.5 py-1.5 rounded-xl hover:bg-surface-container text-slate-400 hover:text-white text-xs font-semibold">Dairy &amp; Paneer</button>
+            <button onclick="filterCategory('spices')" data-cat="spices" class="cat-btn px-3.5 py-1.5 rounded-xl hover:bg-surface-container text-slate-400 hover:text-white text-xs font-semibold">Spices &amp; Saffron</button>
+            <button onclick="filterCategory('meats')" data-cat="meats" class="cat-btn px-3.5 py-1.5 rounded-xl hover:bg-surface-container text-slate-400 hover:text-white text-xs font-semibold">Meats &amp; Seafood</button>
+            <button onclick="filterCategory('rice')" data-cat="rice" class="cat-btn px-3.5 py-1.5 rounded-xl hover:bg-surface-container text-slate-400 hover:text-white text-xs font-semibold">Basmati Rice &amp; Atta</button>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <div class="relative">
+              <span class="material-symbols-outlined text-outline text-base absolute left-3 top-2.5">search</span>
+              <input type="text" id="skuSearchInput" placeholder="Search SKU, supplier, bin..." oninput="searchSkus(this.value)" class="bg-surface-container-high rounded-xl pl-9 pr-4 py-2 text-xs text-white focus:outline-none focus:ring-1 focus:ring-primary w-56 sm:w-72" />
+            </div>
+            <button onclick="openAddSkuModal()" class="px-3.5 py-2 rounded-xl bg-primary text-slate-950 font-bold text-xs hover:brightness-110 flex items-center gap-1 shadow-sm whitespace-nowrap">
+              <span class="material-symbols-outlined text-base">add</span>
+              <span>+ Add SKU</span>
+            </button>
+          </div>
+
+        </div>
+
+        <!-- SKU TABLE (INDIAN RUPEES) -->
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs font-sans" id="skuTable">
+            <thead>
+              <tr class="border-b border-white/5 text-[11px] uppercase tracking-wider text-outline font-mono">
+                <th class="pb-3 font-semibold">Ingredient &amp; Category</th>
+                <th class="pb-3 font-semibold">Storage Location</th>
+                <th class="pb-3 font-semibold text-center">On-Hand</th>
+                <th class="pb-3 font-semibold text-center">Par Level</th>
+                <th class="pb-3 font-semibold">Health Gauge</th>
+                <th class="pb-3 font-semibold text-right">Unit Price (₹)</th>
+                <th class="pb-3 font-semibold text-right">Total Val (₹)</th>
+                <th class="pb-3 font-semibold text-center">86 Out</th>
+                <th class="pb-3 font-semibold text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y border-white/5 font-mono" id="skuTableBody"></tbody>
+          </table>
+        </div>
+
+      </div>
+
+    </main>
+
+    <!-- MODAL: ADD NEW SKU OPTION -->
+    <div id="addSkuModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+      <div class="bg-surface-container border border-white/10 rounded-2xl w-full max-w-lg p-6 shadow-2xl">
+        <div class="flex items-center justify-between pb-3 border-b border-white/10">
+          <h3 class="font-display text-lg font-bold text-white flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary">add_circle</span>
+            Add New Inventory SKU Option
+          </h3>
+          <button onclick="closeAddSkuModal()" class="text-outline hover:text-white">
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </div>
+
+        <form id="addSkuFormPage" onsubmit="handleCreateSku(event)" class="mt-4 space-y-3.5 text-xs">
+          <div>
+            <label class="block text-outline font-semibold mb-1">Ingredient / Raw Material Name</label>
+            <input type="text" id="modalSkuName" required placeholder="e.g. Kashmiri Mongra Saffron" class="input-cell w-full text-xs" />
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-outline font-semibold mb-1">Category</label>
+              <select id="modalSkuCat" class="input-cell w-full text-xs">
+                <option value="spices">Spices &amp; Saffron</option>
+                <option value="dairy">Dairy &amp; Paneer</option>
+                <option value="meats">Meats &amp; Seafood</option>
+                <option value="rice">Basmati Rice &amp; Atta</option>
+                <option value="produce">Fresh Produce</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-outline font-semibold mb-1">Storage Bin / Room</label>
+              <input type="text" id="modalSkuLocation" placeholder="Cold Storage Shelf 2" value="Cold Storage Shelf 2" class="input-cell w-full text-xs" />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-3 gap-3">
+            <div>
+              <label class="block text-outline font-semibold mb-1">Current On-Hand</label>
+              <input type="number" step="0.1" id="modalSkuOnHand" required placeholder="15" class="input-cell w-full text-xs" />
+            </div>
+            <div>
+              <label class="block text-outline font-semibold mb-1">Par Target</label>
+              <input type="number" step="0.1" id="modalSkuPar" required placeholder="30" class="input-cell w-full text-xs" />
+            </div>
+            <div>
+              <label class="block text-outline font-semibold mb-1">Unit Type</label>
+              <input type="text" id="modalSkuUnit" required placeholder="kg / g / cuts" value="kg" class="input-cell w-full text-xs" />
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-outline font-semibold mb-1">Unit Cost Price in ₹ (Rupees)</label>
+            <input type="number" step="1" id="modalSkuPrice" required placeholder="450" class="input-cell w-full text-xs font-bold text-amber-300" />
+          </div>
+
+          <div class="pt-3 flex items-center justify-end gap-2.5">
+            <button type="button" onclick="closeAddSkuModal()" class="px-4 py-2 rounded-xl bg-surface-container-high text-slate-300 font-semibold hover:text-white">Cancel</button>
+            <button type="submit" class="px-5 py-2 rounded-xl bg-primary text-slate-950 font-bold shadow-md hover:brightness-110">+ Add &amp; Save SKU</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- TOAST CONTAINER -->
+    <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <script src="assets/data.js"></script>
+    <script>
+      let isEditMode = false;
+      let skus = DB.getInventory();
+      let activeCategory = 'all';
+
+      function toggleEditMode() {
+        isEditMode = !isEditMode;
+        document.getElementById('editModeText').textContent = isEditMode ? 'Exit Edit Mode' : 'Quick Edit Mode';
+        document.getElementById('editModeToggleBtn').className = isEditMode ? 
+          'px-3 py-1 rounded-full bg-primary text-slate-950 font-bold text-xs flex items-center gap-1 shadow-sm' : 
+          'px-3 py-1 rounded-full bg-surface-container hover:bg-surface-bright text-xs text-white border border-white/10 flex items-center gap-1';
+        renderSkus();
+        showToast(isEditMode ? 'Inline edit mode enabled: modify values directly in the table!' : 'Exited edit mode.', 'info');
+      }
+
+      function renderSkus(items = skus) {
+        const tbody = document.getElementById('skuTableBody');
+        tbody.innerHTML = '';
+
+        let criticalCount = 0;
+        let totalVal = 0;
+
+        items.forEach((sku, idx) => {
+          if (activeCategory !== 'all' && sku.cat !== activeCategory) return;
+
+          const ratio = (sku.onHand / sku.par) * 100;
+          if (ratio < 25) criticalCount++;
+          totalVal += (sku.onHand * sku.price);
+
+          let healthColor = ratio < 25 ? 'bg-rose-500' : (ratio < 50 ? 'bg-amber-400' : 'bg-emerald-400');
+          let textColor = ratio < 25 ? 'text-rose-400 font-bold' : (ratio < 50 ? 'text-amber-400 font-bold' : 'text-emerald-400');
+          let healthLabel = ratio < 25 ? 'CRITICAL' : (ratio < 50 ? 'Reorder' : 'Healthy');
+
+          const tr = document.createElement('tr');
+          tr.className = 'hover:bg-surface-container/40 transition';
+
+          if (isEditMode) {
+            // EDITABLE ROW
+            tr.innerHTML = `
+              <td class="py-2.5 font-sans">
+                <input type="text" value="${sku.name}" data-idx="${idx}" data-field="name" class="input-cell w-48 font-bold text-white text-xs" />
+                <div class="text-[10px] text-outline font-mono mt-0.5">${sku.id} · ${sku.cat}</div>
+              </td>
+              <td class="py-2.5 font-sans">
+                <input type="text" value="${sku.location}" data-idx="${idx}" data-field="location" class="input-cell w-36 text-xs text-slate-300" />
+              </td>
+              <td class="py-2.5 text-center font-mono">
+                <input type="number" step="0.1" value="${sku.onHand}" data-idx="${idx}" data-field="onHand" class="input-cell w-20 text-center font-bold text-white text-xs" />
+                <span class="text-[10px] text-outline ml-1">${sku.unit}</span>
+              </td>
+              <td class="py-2.5 text-center font-mono">
+                <input type="number" step="0.1" value="${sku.par}" data-idx="${idx}" data-field="par" class="input-cell w-20 text-center text-xs text-slate-300" />
+              </td>
+              <td class="py-2.5">
+                <div class="w-16 bg-surface-container-highest h-2 rounded-full overflow-hidden">
+                  <div class="${healthColor} h-full rounded-full" style="width: ${Math.min(ratio, 100)}%"></div>
+                </div>
+              </td>
+              <td class="py-2.5 text-right font-mono">
+                <input type="number" step="1" value="${sku.price}" data-idx="${idx}" data-field="price" class="input-cell w-24 text-right font-bold text-amber-300 text-xs" />
+              </td>
+              <td class="py-2.5 text-right font-sans font-bold text-white">₹${Math.round(sku.onHand * sku.price).toLocaleString('en-IN')}</td>
+              <td class="py-2.5 text-center">
+                <input type="checkbox" ${sku.is86 ? 'checked' : ''} data-idx="${idx}" data-field="is86" class="w-4 h-4 rounded text-primary focus:ring-0 cursor-pointer" />
+              </td>
+              <td class="py-2.5 text-right">
+                <button onclick="removeSku(${idx})" class="p-1 text-outline hover:text-rose-400" title="Delete SKU">
+                  <span class="material-symbols-outlined text-base">delete</span>
+                </button>
+              </td>
+            `;
+          } else {
+            // VIEW ROW
+            tr.innerHTML = `
+              <td class="py-3 font-sans">
+                <div class="font-bold text-white flex items-center gap-2">
+                  <span>${sku.name}</span>
+                  ${sku.is86 ? '<span class="px-1.5 py-0.2 rounded bg-rose-500/20 text-rose-300 text-[10px] font-bold">86 LOCKED</span>' : ''}
+                </div>
+                <div class="text-[11px] text-outline font-mono">${sku.id} · Category: ${sku.cat.toUpperCase()}</div>
+              </td>
+              <td class="py-3 text-slate-300 font-sans">${sku.location}</td>
+              <td class="py-3 text-center font-bold text-white font-mono">
+                ${sku.onHand} ${sku.unit}
+              </td>
+              <td class="py-3 text-center text-slate-300 font-mono">
+                ${sku.par} ${sku.unit}
+              </td>
+              <td class="py-3">
+                <div class="flex items-center gap-2">
+                  <div class="w-16 bg-surface-container-highest h-2 rounded-full overflow-hidden">
+                    <div class="${healthColor} h-full rounded-full" style="width: ${Math.min(ratio, 100)}%"></div>
+                  </div>
+                  <span class="${textColor} text-[10px]">${healthLabel}</span>
+                </div>
+              </td>
+              <td class="py-3 text-right font-mono font-bold text-amber-300">₹${sku.price.toFixed(0)}</td>
+              <td class="py-3 text-right font-sans font-bold text-white">₹${Math.round(sku.onHand * sku.price).toLocaleString('en-IN')}</td>
+              <td class="py-3 text-center">
+                <button onclick="toggle86('${sku.id}')" class="px-2 py-0.5 rounded-lg ${sku.is86 ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30' : 'bg-surface-container text-slate-300 hover:text-white'} text-[10px] font-bold transition">
+                  ${sku.is86 ? '86 Out' : 'Active'}
+                </button>
+              </td>
+              <td class="py-3 text-right">
+                <button onclick="quickEditItem(${idx})" class="p-1 rounded bg-surface-container hover:bg-surface-bright text-slate-300 hover:text-white text-xs mr-1" title="Edit">
+                  <span class="material-symbols-outlined text-sm">edit</span>
+                </button>
+              </td>
+            `;
+          }
+          tbody.appendChild(tr);
+        });
+
+        document.getElementById('totalSkusMetric').textContent = skus.length;
+        document.getElementById('lowStockCount').textContent = `${criticalCount} items`;
+        document.getElementById('stockValuationMetric').textContent = `₹${Math.round(totalVal).toLocaleString('en-IN')}`;
+      }
+
+      function filterCategory(cat) {
+        activeCategory = cat;
+        document.querySelectorAll('.cat-btn').forEach(btn => {
+          if (btn.getAttribute('data-cat') === cat) {
+            btn.className = 'cat-btn px-3.5 py-1.5 rounded-xl bg-primary-container text-slate-950 font-bold text-xs';
+          } else {
+            btn.className = 'cat-btn px-3.5 py-1.5 rounded-xl hover:bg-surface-container text-slate-400 hover:text-white text-xs font-semibold';
+          }
+        });
+        renderSkus();
+      }
+
+      function searchSkus(q) {
+        const val = q.toLowerCase();
+        const filtered = skus.filter(s => s.name.toLowerCase().includes(val) || s.id.toLowerCase().includes(val) || s.location.toLowerCase().includes(val));
+        renderSkus(filtered);
+      }
+
+      function toggle86(id) {
+        const sku = skus.find(s => s.id === id);
+        if (sku) {
+          sku.is86 = !sku.is86;
+          DB.saveInventory(skus);
+          showToast(`${sku.name} marked as ${sku.is86 ? "86'd (Locked)" : "Available"}`, sku.is86 ? 'warning' : 'success');
+          renderSkus();
+        }
+      }
+
+      function quickEditItem(idx) {
+        isEditMode = true;
+        document.getElementById('editModeText').textContent = 'Exit Edit Mode';
+        renderSkus();
+      }
+
+      function removeSku(idx) {
+        skus.splice(idx, 1);
+        DB.saveInventory(skus);
+        renderSkus();
+        showToast('SKU deleted from inventory', 'info');
+      }
+
+      function saveAllInventoryModifications() {
+        if (isEditMode) {
+          document.querySelectorAll('[data-field]').forEach(input => {
+            const idx = parseInt(input.getAttribute('data-idx'));
+            const field = input.getAttribute('data-field');
+            if (skus[idx]) {
+              if (field === 'is86') {
+                skus[idx][field] = input.checked;
+              } else if (field === 'onHand' || field === 'par' || field === 'price') {
+                skus[idx][field] = parseFloat(input.value) || 0;
+              } else {
+                skus[idx][field] = input.value;
+              }
+            }
+          });
+        }
+        DB.saveInventory(skus);
+        showToast('💾 Saved All Inventory Changes to Database!', 'success');
+        renderSkus();
+      }
+
+      function openAddSkuModal() { document.getElementById('addSkuModal').classList.remove('hidden'); }
+      function closeAddSkuModal() { document.getElementById('addSkuModal').classList.add('hidden'); }
+
+      function handleCreateSku(e) {
+        e.preventDefault();
+        const item = {
+          name: document.getElementById('modalSkuName').value,
+          cat: document.getElementById('modalSkuCat').value,
+          location: document.getElementById('modalSkuLocation').value || 'Cold Storage Shelf 1',
+          onHand: parseFloat(document.getElementById('modalSkuOnHand').value) || 0,
+          par: parseFloat(document.getElementById('modalSkuPar').value) || 10,
+          unit: document.getElementById('modalSkuUnit').value || 'kg',
+          price: parseFloat(document.getElementById('modalSkuPrice').value) || 100,
+          is86: false
+        };
+        DB.addInventoryItem(item);
+        skus = DB.getInventory();
+        closeAddSkuModal();
+        document.getElementById('addSkuFormPage').reset();
+        renderSkus();
+        showToast(`Added new SKU: ${item.name} (₹${item.price}/${item.unit})`, 'success');
+      }
+
+      function openPoModal() {
+        window.location.href = 'admin.html';
+      }
+
+      renderSkus();
+
+      function showToast(message, type = 'success') {
+        const container = document.getElementById('toastContainer');
+        const toast = document.createElement('div');
+        const colorClass = type === 'success' ? 'border-emerald-500/40 text-emerald-300' :
+                           type === 'warning' ? 'border-amber-500/40 text-amber-300' : 'border-sky-500/40 text-sky-300';
+        
+        toast.className = `p-3 rounded-xl bg-surface-container-high/95 backdrop-blur-md border ${colorClass} shadow-xl text-xs font-semibold flex items-center gap-2 pointer-events-auto transform transition-all duration-300 translate-y-3 opacity-0`;
+        toast.innerHTML = `
+          <span class="material-symbols-outlined text-base">${type === 'success' ? 'check_circle' : 'info'}</span>
+          <span>${message}</span>
+        `;
+        container.appendChild(toast);
+
+        setTimeout(() => toast.classList.remove('translate-y-3', 'opacity-0'), 10);
+        setTimeout(() => {
+          toast.classList.add('translate-y-3', 'opacity-0');
+          setTimeout(() => toast.remove(), 300);
+        }, 3000);
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Analytics & Performance P&L (₹) | SavoryPulse India</title>
+    <meta name="description" content="Executive Indian dining analytics, hourly covers, GST realization, Rupee margins, and Z-report operations." />
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="assets/data.js"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              background: '#0b1326',
+              surface: '#0b1326',
+              'surface-dim': '#0b1326',
+              'surface-bright': '#31394d',
+              'surface-container-lowest': '#060e20',
+              'surface-container-low': '#131b2e',
+              'surface-container': '#171f33',
+              'surface-container-high': '#222a3d',
+              'surface-container-highest': '#2d3449',
+              'on-surface': '#dae2fd',
+              'on-surface-variant': '#d8c3ad',
+              outline: '#a08e7a',
+              primary: '#ffc174',
+              'primary-container': '#f59e0b',
+              'on-primary': '#472a00',
+              secondary: '#4edea3',
+              'secondary-container': '#00a572',
+              tertiary: '#8ed5ff',
+              error: '#ffb4ab',
+              'error-container': '#93000a'
+            },
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+              display: ['Plus Jakarta Sans', 'sans-serif'],
+              mono: ['JetBrains Mono', 'monospace']
+            }
+          }
+        }
+      };
+    </script>
+    <style>
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background: #060e20;
+        color: #dae2fd;
+        font-family: 'Inter', sans-serif;
+      }
+      .font-display { font-family: 'Plus Jakarta Sans', sans-serif; }
+      .glass-card {
+        background: #131b2e;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .bar-track:hover .bar-fill {
+        filter: brightness(1.2);
+      }
+    </style>
+  </head>
+  <body class="min-h-screen antialiased flex flex-col selection:bg-primary-container selection:text-on-primary">
+    
+    <!-- HEADER -->
+    <header class="bg-surface-container-lowest border-b border-white/5 px-4 py-3 flex items-center justify-between sticky top-0 z-40">
+      
+      <!-- Brand & Title -->
+      <div class="flex items-center gap-3.5">
+        <a href="index.html" class="flex items-center gap-2.5 group">
+          <div class="h-9 w-9 rounded-xl bg-gradient-to-br from-amber-300 via-primary-container to-amber-600 text-slate-950 flex items-center justify-center font-bold shadow-[0_0_14px_rgba(245,158,11,0.4)]">
+            <span class="material-symbols-outlined text-xl">restaurant</span>
+          </div>
+          <div>
+            <div class="font-display text-sm font-extrabold text-white tracking-tight leading-none group-hover:text-primary transition">SavoryPulse</div>
+            <div class="text-[9px] uppercase tracking-wider text-outline font-semibold leading-none mt-1">Analytics &amp; ₹ P&amp;L Studio</div>
+          </div>
+        </a>
+
+        <div class="h-5 w-px bg-white/10 mx-1 hidden sm:block"></div>
+
+        <!-- Navigation Links -->
+        <nav class="hidden md:flex items-center gap-1 text-xs">
+          <a href="index.html" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-surface-container transition">Overview</a>
+          <a href="dispatch.html" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-surface-container transition">Live Dispatch</a>
+          <a href="analytics.html" class="px-3 py-1.5 rounded-lg bg-sky-500/20 text-sky-300 border border-sky-500/30 font-bold flex items-center gap-1">
+            <span class="material-symbols-outlined text-base text-tertiary">analytics</span>
+            <span>Analytics (₹)</span>
+          </a>
+          <a href="inventory.html" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-surface-container transition">Inventory</a>
+          <a href="menu.html" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-surface-container transition">Digital Menu</a>
+          <a href="sales.html" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-surface-container transition">Sales (₹)</a>
+          <a href="admin.html" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-surface-container transition flex items-center gap-1">
+            <span class="material-symbols-outlined text-sm">tune</span>
+            <span>Data Control Panel</span>
+          </a>
+        </nav>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex items-center gap-2.5">
+        <button onclick="openAddHourlyModal()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-surface-container hover:bg-primary hover:text-slate-950 text-xs font-bold text-slate-200 transition">
+          <span class="material-symbols-outlined text-base text-primary">add_circle</span>
+          <span>+ Add Option (Hour)</span>
+        </button>
+
+        <button onclick="saveAllAnalyticsModifications()" id="saveAnalyticsBtn" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-secondary text-slate-950 text-xs font-extrabold shadow-sm hover:brightness-110 transition">
+          <span class="material-symbols-outlined text-base font-bold">save</span>
+          <span>Save All Changes</span>
+        </button>
+
+        <button onclick="openZReport()" class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-surface-container hover:bg-surface-container-high text-xs font-semibold text-slate-200 transition">
+          <span class="material-symbols-outlined text-base text-tertiary">receipt_long</span>
+          <span>GST Z-Report</span>
+        </button>
+        <button onclick="triggerPosSync()" id="posSyncBtn" class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-primary hover:bg-amber-300 text-slate-950 text-xs font-extrabold shadow-sm transition">
+          <span class="material-symbols-outlined text-base font-bold">sync</span>
+          <span>Sync</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- CONTENT WRAPPER -->
+    <main class="flex-1 max-w-[1600px] w-full mx-auto p-4 sm:p-6 space-y-6">
+      
+      <!-- TEMPORAL SELECTOR BAR -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-surface-container-lowest/80 p-2 rounded-2xl border border-white/5">
+        <div class="flex flex-wrap items-center gap-1.5" id="dateFilterGroup">
+          <button onclick="setDateRange('today')" data-range="today" class="range-btn px-3.5 py-1.5 rounded-xl bg-primary-container text-slate-950 font-bold text-xs flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-slate-950 animate-pulse"></span>
+            Today: Dinner Service
+          </button>
+          <button onclick="setDateRange('yesterday')" data-range="yesterday" class="range-btn px-3.5 py-1.5 rounded-xl hover:bg-surface-container text-slate-400 hover:text-white text-xs font-semibold">
+            vs Yesterday
+          </button>
+          <button onclick="setDateRange('week')" data-range="week" class="range-btn px-3.5 py-1.5 rounded-xl hover:bg-surface-container text-slate-400 hover:text-white text-xs font-semibold">
+            Last 7 Days
+          </button>
+          <button onclick="setDateRange('month')" data-range="month" class="range-btn px-3.5 py-1.5 rounded-xl hover:bg-surface-container text-slate-400 hover:text-white text-xs font-semibold">
+            Month to Date
+          </button>
+        </div>
+        <div class="flex items-center gap-2 px-3 text-xs text-outline font-mono">
+          <span class="material-symbols-outlined text-sm text-primary">schedule</span>
+          <span>Shift Elapsed: 04h 38m · Petpooja POS Connected</span>
+        </div>
+      </div>
+
+      <!-- AI REAL-TIME ADVISORY STREAM -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        
+        <div class="p-4 rounded-2xl bg-surface-container-low border border-primary/20 flex items-start gap-3 shadow-sm">
+          <div class="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center shrink-0 text-primary">
+            <span class="material-symbols-outlined text-xl">bolt</span>
+          </div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between text-xs">
+              <span class="font-bold text-primary uppercase tracking-wider">AI Surge Recommendation</span>
+              <span class="text-outline">Priority 1 · Velocity Pacing</span>
+            </div>
+            <p class="text-xs sm:text-sm text-slate-200 mt-1 leading-snug">
+              <strong class="text-white">Awadhi Dum Biryani &amp; Truffle Dal Makhani</strong> are pacing at <span class="text-secondary font-bold">2.4x expected velocity</span>. Fire 25 additional handis before 20:30 rush wave.
+            </p>
+          </div>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-surface-container-low border border-rose-500/20 flex items-start gap-3 shadow-sm">
+          <div class="w-10 h-10 rounded-xl bg-rose-500/20 flex items-center justify-center shrink-0 text-rose-300">
+            <span class="material-symbols-outlined text-xl">timer</span>
+          </div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between text-xs">
+              <span class="font-bold text-rose-300 uppercase tracking-wider">Tandoor Throughput Alert</span>
+              <span class="text-outline">Station 1 · Clay Tandoors</span>
+            </div>
+            <p class="text-xs sm:text-sm text-slate-200 mt-1 leading-snug">
+              Tandoor skewer queue reached <span class="text-rose-300 font-bold">18 active skewers</span>. Auto-routing incoming appetizers to Sigri grill to prevent expeditor delay.
+            </p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- KPI METRICS GRID (INDIAN RUPEES) -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+        
+        <div class="glass-card rounded-2xl p-5 flex flex-col justify-between">
+          <div class="flex items-center justify-between text-xs text-outline font-semibold">
+            <span>GROSS MARGIN REALIZATION</span>
+            <span class="material-symbols-outlined text-emerald-400">trending_up</span>
+          </div>
+          <div class="mt-3 flex items-baseline gap-2">
+            <span class="font-display text-3xl sm:text-4xl font-black text-white" id="kpiMargin">36.4%</span>
+            <span class="text-xs font-bold text-secondary font-mono">+2.8% vs target</span>
+          </div>
+          <div class="mt-3 text-[11px] text-slate-400">Target baseline: 34.0% (Prime cost: 56.4%)</div>
+        </div>
+
+        <div class="glass-card rounded-2xl p-5 flex flex-col justify-between">
+          <div class="flex items-center justify-between text-xs text-outline font-semibold">
+            <span>TOTAL SHIFT REVENUE</span>
+            <span class="material-symbols-outlined text-primary">currency_rupee</span>
+          </div>
+          <div class="mt-3 flex items-baseline gap-2">
+            <span class="font-display text-3xl sm:text-4xl font-black text-amber-300 font-mono" id="kpiRevenue">₹1,84,500</span>
+            <span class="text-xs font-bold text-secondary font-mono">+19.2%</span>
+          </div>
+          <div class="mt-3 text-[11px] text-slate-400">Dinner pace: ₹40,100 / hour</div>
+        </div>
+
+        <div class="glass-card rounded-2xl p-5 flex flex-col justify-between">
+          <div class="flex items-center justify-between text-xs text-outline font-semibold">
+            <span>AVG TABLE TURNOVER</span>
+            <span class="material-symbols-outlined text-sky-400">schedule</span>
+          </div>
+          <div class="mt-3 flex items-baseline gap-2">
+            <span class="font-display text-3xl sm:text-4xl font-black text-white" id="kpiTurns">48 min</span>
+            <span class="text-xs font-bold text-secondary font-mono">-5 min faster</span>
+          </div>
+          <div class="mt-3 text-[11px] text-slate-400">2.6 table turns / shift capacity</div>
+        </div>
+
+        <div class="glass-card rounded-2xl p-5 flex flex-col justify-between">
+          <div class="flex items-center justify-between text-xs text-outline font-semibold">
+            <span>FOOD COST RATIO</span>
+            <span class="material-symbols-outlined text-emerald-400">pie_chart</span>
+          </div>
+          <div class="mt-3 flex items-baseline gap-2">
+            <span class="font-display text-3xl sm:text-4xl font-black text-emerald-400" id="kpiFoodCost">25.8%</span>
+            <span class="text-xs font-bold text-secondary font-mono">-1.4% vs budget</span>
+          </div>
+          <div class="mt-3 text-[11px] text-slate-400">Dairy &amp; spices waste under 1.6%</div>
+        </div>
+
+      </div>
+
+      <!-- MAIN CHARTS ROW: HOURLY COVERS & CHANNEL REVENUE -->
+      <div class="grid grid-cols-1 xl:grid-cols-12 gap-6">
+        
+        <!-- Left: Hourly Covers & Revenue Distribution (8 cols) -->
+        <div class="xl:col-span-8 glass-card rounded-[28px] p-6">
+          <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+            <div>
+              <div class="text-xs uppercase tracking-wider text-outline font-semibold">Live Pacing Telemetry</div>
+              <h3 class="font-display text-xl font-bold text-white mt-0.5">Hourly Covers &amp; Revenue Peak (₹)</h3>
+            </div>
+            <div class="flex items-center gap-4 text-xs font-mono">
+              <span class="flex items-center gap-1.5 text-amber-300">
+                <span class="w-2.5 h-2.5 rounded bg-primary-container"></span> Revenue (₹)
+              </span>
+              <span class="flex items-center gap-1.5 text-sky-300">
+                <span class="w-2.5 h-2.5 rounded bg-sky-400"></span> Covers (Guests)
+              </span>
+            </div>
+          </div>
+
+          <!-- Dynamic Bar Chart Container -->
+          <div id="hourlyChartContainer" class="h-64 flex items-end justify-between gap-3 pt-6 pb-2 px-2 border-b border-white/5 font-mono text-xs text-outline overflow-x-auto">
+            <!-- Rendered dynamically by JavaScript -->
+          </div>
+
+          <div class="mt-4 flex items-center justify-between text-xs text-slate-400">
+            <span>Peak Turn Pacing: <strong>19:30 wave (76 seated covers)</strong></span>
+            <span>Forecasted Shift Total: <strong class="text-emerald-400 font-mono">₹2,35,000</strong></span>
+          </div>
+
+        </div>
+
+        <!-- Right: Revenue Channel Distribution (4 cols) -->
+        <div class="xl:col-span-4 glass-card rounded-[28px] p-6 flex flex-col justify-between">
+          <div>
+            <div class="text-xs uppercase tracking-wider text-outline font-semibold">Channel Intelligence</div>
+            <h3 class="font-display text-xl font-bold text-white mt-0.5">Sales by Channel (₹)</h3>
+
+            <!-- Channel Breakdown List -->
+            <div class="mt-5 space-y-4 text-xs">
+              
+              <div>
+                <div class="flex items-center justify-between text-slate-200">
+                  <span class="flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-primary-container"></span>
+                    <strong class="text-white">Dine-in (Petpooja)</strong>
+                  </span>
+                  <span class="font-mono font-bold text-emerald-400">₹1,14,390 (62%)</span>
+                </div>
+                <div class="w-full bg-surface-container-highest h-2 rounded-full mt-1.5 overflow-hidden">
+                  <div class="bg-primary-container h-full rounded-full" style="width: 62%"></div>
+                </div>
+              </div>
+
+              <div>
+                <div class="flex items-center justify-between text-slate-200">
+                  <span class="flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
+                    <strong class="text-white">Zomato Gold Delivery</strong>
+                  </span>
+                  <span class="font-mono font-bold text-emerald-400">₹33,210 (18%)</span>
+                </div>
+                <div class="w-full bg-surface-container-highest h-2 rounded-full mt-1.5 overflow-hidden">
+                  <div class="bg-rose-500 h-full rounded-full" style="width: 18%"></div>
+                </div>
+              </div>
+
+              <div>
+                <div class="flex items-center justify-between text-slate-200">
+                  <span class="flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-orange-400"></span>
+                    <strong class="text-white">Swiggy Gourmet</strong>
+                  </span>
+                  <span class="font-mono font-bold text-emerald-400">₹25,830 (14%)</span>
+                </div>
+                <div class="w-full bg-surface-container-highest h-2 rounded-full mt-1.5 overflow-hidden">
+                  <div class="bg-orange-400 h-full rounded-full" style="width: 14%"></div>
+                </div>
+              </div>
+
+              <div>
+                <div class="flex items-center justify-between text-slate-200">
+                  <span class="flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-sky-400"></span>
+                    <strong class="text-white">Direct / DotPe Catering</strong>
+                  </span>
+                  <span class="font-mono font-bold text-emerald-400">₹11,070 (6%)</span>
+                </div>
+                <div class="w-full bg-surface-container-highest h-2 rounded-full mt-1.5 overflow-hidden">
+                  <div class="bg-sky-400 h-full rounded-full" style="width: 6%"></div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="mt-6 pt-4 border-t border-white/5 flex items-center justify-between text-xs">
+            <span class="text-outline">Aggregator Commission Avg: <strong>16.2%</strong></span>
+            <span class="text-secondary font-bold font-mono">Dine-in Margin: +18.5%</span>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- SERVER EFFICIENCY & PACING LEADERBOARD -->
+      <div class="glass-card rounded-[28px] p-6">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <div class="text-xs uppercase tracking-wider text-outline font-semibold">Staff Productivity</div>
+            <h3 class="font-display text-xl font-bold text-white mt-0.5">Captain &amp; Steward Pacing (₹)</h3>
+          </div>
+          <span class="text-xs font-mono text-outline">Sorted by Sales Velocity</span>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs font-sans">
+            <thead>
+              <tr class="border-b border-white/5 text-[11px] uppercase tracking-wider text-outline">
+                <th class="pb-3 font-semibold">Captain Name</th>
+                <th class="pb-3 font-semibold text-center">Section</th>
+                <th class="pb-3 font-semibold text-center">Tables Closed</th>
+                <th class="pb-3 font-semibold text-right">Avg Check</th>
+                <th class="pb-3 font-semibold text-right">Gross Sales (₹)</th>
+                <th class="pb-3 font-semibold text-right">Turn Time</th>
+                <th class="pb-3 font-semibold text-right">Tip Avg</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y border-white/5 font-mono">
+              <tr class="hover:bg-surface-container/40">
+                <td class="py-3 font-sans font-bold text-white flex items-center gap-2">
+                  <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                  Ramesh Sharma (Captain)
+                </td>
+                <td class="py-3 text-center text-slate-300 font-sans">Main Royal Hall (T1-8)</td>
+                <td class="py-3 text-center text-white font-bold">14 tables</td>
+                <td class="py-3 text-right text-slate-300 font-sans">₹3,850</td>
+                <td class="py-3 text-right font-bold text-emerald-400 font-sans">₹53,900</td>
+                <td class="py-3 text-right text-secondary font-sans font-bold">42m</td>
+                <td class="py-3 text-right text-primary font-bold">15.4%</td>
+              </tr>
+              <tr class="hover:bg-surface-container/40">
+                <td class="py-3 font-sans font-bold text-white flex items-center gap-2">
+                  <span class="w-2 h-2 rounded-full bg-primary"></span>
+                  Priya Nair (Senior Steward)
+                </td>
+                <td class="py-3 text-center text-slate-300 font-sans">Terrace Garden (P1-10)</td>
+                <td class="py-3 text-center text-white font-bold">18 tables</td>
+                <td class="py-3 text-right text-slate-300 font-sans">₹2,950</td>
+                <td class="py-3 text-right font-bold text-emerald-400 font-sans">₹53,100</td>
+                <td class="py-3 text-right text-secondary font-sans font-bold">38m</td>
+                <td class="py-3 text-right text-primary font-bold">14.8%</td>
+              </tr>
+              <tr class="hover:bg-surface-container/40">
+                <td class="py-3 font-sans font-bold text-white flex items-center gap-2">
+                  <span class="w-2 h-2 rounded-full bg-sky-400"></span>
+                  Sunil Verma (Steward)
+                </td>
+                <td class="py-3 text-center text-slate-300 font-sans">Heritage Bar Lounge (B1-6)</td>
+                <td class="py-3 text-center text-white font-bold">22 tables</td>
+                <td class="py-3 text-right text-slate-300 font-sans">₹2,420</td>
+                <td class="py-3 text-right font-bold text-emerald-400 font-sans">₹53,240</td>
+                <td class="py-3 text-right text-slate-300 font-sans">32m</td>
+                <td class="py-3 text-right text-primary font-bold">16.0%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- Z-REPORT PREVIEW MODAL (INDIAN GST SPEC) -->
+    <div id="zReportModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+      <div class="bg-surface-container border border-white/10 rounded-2xl w-full max-w-lg p-6 shadow-2xl">
+        <div class="flex items-center justify-between pb-3 border-b border-white/10">
+          <h3 class="font-display text-lg font-bold text-white flex items-center gap-2">
+            <span class="material-symbols-outlined text-tertiary">receipt_long</span>
+            Daily Register Closeout: GST Z-Report (₹)
+          </h3>
+          <button onclick="closeZReport()" class="text-outline hover:text-white">
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </div>
+
+        <div class="mt-4 p-4 rounded-xl bg-surface-container-lowest font-mono text-xs text-slate-300 space-y-2 border border-white/5">
+          <div class="text-center font-bold text-white border-b border-white/10 pb-2">
+            SAVORYPULSE LUXURY DINING · REGISTER #1<br/>
+            CYBER HUB GURUGRAM · GSTIN: 07AAACS1429B1Z4<br/>
+            SHIFT CLOSEOUT Z-0941
+          </div>
+          <div class="flex justify-between"><span>DATE &amp; TIME:</span><span class="text-white">2026-10-02 19:42 IST</span></div>
+          <div class="flex justify-between"><span>GROSS SALES:</span><span class="text-white font-bold">₹1,84,500.00</span></div>
+          <div class="flex justify-between"><span>NET TAXABLE VALUE:</span><span class="text-white">₹1,69,266.05</span></div>
+          <div class="flex justify-between"><span>CGST (2.5%):</span><span class="text-white">₹4,231.65</span></div>
+          <div class="flex justify-between"><span>SGST (2.5%):</span><span class="text-white">₹4,231.65</span></div>
+          <div class="flex justify-between"><span>SERVICE CHARGE (5%):</span><span class="text-white">₹8,463.30</span></div>
+          <div class="flex justify-between"><span>TIPS REALIZED:</span><span class="text-emerald-400 font-bold">₹14,250.00</span></div>
+          <div class="border-t border-white/10 pt-2 flex justify-between font-bold text-white text-sm">
+            <span>TOTAL COLLECTED:</span><span class="text-amber-300 font-bold">₹2,00,442.65</span>
+          </div>
+          <div class="border-t border-white/10 pt-2 text-[10px] text-outline text-center">
+            UPI / QR (PHONEPE/GPAY): ₹1,12,400.00 · PINE LABS CARDS: ₹74,800.00 · CASH: ₹13,242.65
+          </div>
+        </div>
+
+        <div class="mt-5 flex items-center justify-end gap-2.5">
+          <button onclick="window.print()" class="px-4 py-2 rounded-xl bg-surface-container-high text-white text-xs font-semibold hover:bg-surface-bright flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-sm">print</span>
+            Print GST Z-Tape
+          </button>
+          <button onclick="closeZReport()" class="px-4 py-2 rounded-xl bg-primary text-slate-950 text-xs font-bold hover:brightness-110">
+            Acknowledge &amp; Save
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL: ADD HOURLY FORECAST OPTION -->
+    <div id="addHourlyModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+      <div class="bg-surface-container border border-white/10 rounded-2xl w-full max-w-md p-6 shadow-2xl">
+        <div class="flex items-center justify-between pb-3 border-b border-white/10">
+          <h3 class="font-display text-lg font-bold text-white flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary">add_circle</span>
+            Add Hourly Pacing Slot &amp; Forecast
+          </h3>
+          <button onclick="closeAddHourlyModal()" class="text-outline hover:text-white">
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </div>
+
+        <form onsubmit="handleCreateHourly(event)" class="mt-4 space-y-3.5 text-xs">
+          <div>
+            <label class="block text-outline font-semibold mb-1 uppercase tracking-wider">Service Hour (e.g. 23:00)</label>
+            <input type="text" id="newHourSlot" required placeholder="e.g. 23:00" class="w-full bg-surface-container-high rounded-xl p-2.5 text-white border border-white/5 focus:ring-1 focus:ring-primary focus:outline-none font-mono" />
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-outline font-semibold mb-1 uppercase tracking-wider">Revenue Forecast (₹)</label>
+              <input type="number" id="newHourRev" required placeholder="18500" class="w-full bg-surface-container-high rounded-xl p-2.5 text-white border border-white/5 focus:ring-1 focus:ring-primary focus:outline-none font-mono" />
+            </div>
+            <div>
+              <label class="block text-outline font-semibold mb-1 uppercase tracking-wider">Seated Covers (Guests)</label>
+              <input type="number" id="newHourCovers" required placeholder="28" class="w-full bg-surface-container-high rounded-xl p-2.5 text-white border border-white/5 focus:ring-1 focus:ring-primary focus:outline-none font-mono" />
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2 pt-1">
+            <input type="checkbox" id="newHourPeak" class="rounded bg-surface-container-high border-white/10 text-primary focus:ring-primary" />
+            <label for="newHourPeak" class="text-slate-300 font-semibold cursor-pointer">Mark as Peak Service Wave (Gold Highlight)</label>
+          </div>
+
+          <div class="pt-3 flex items-center justify-end gap-2.5">
+            <button type="button" onclick="closeAddHourlyModal()" class="px-4 py-2 rounded-xl bg-surface-container-high text-slate-300 font-semibold hover:text-white">Cancel</button>
+            <button type="submit" class="px-5 py-2 rounded-xl bg-primary text-slate-950 font-bold shadow-md hover:brightness-110">Add Option to Forecast</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- TOAST CONTAINER -->
+    <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <script>
+      let currentAnalytics = DB.getAnalytics();
+
+      function renderAnalytics() {
+        // Render KPIs
+        document.getElementById('kpiMargin').textContent = `${currentAnalytics.grossMargin}%`;
+        document.getElementById('kpiRevenue').textContent = `₹${currentAnalytics.shiftRevenue.toLocaleString('en-IN')}`;
+        document.getElementById('kpiTurns').textContent = `${currentAnalytics.tableTurnTime} min`;
+        document.getElementById('kpiFoodCost').textContent = `${currentAnalytics.foodCostRatio}%`;
+
+        // Render dynamic hourly chart
+        const chartContainer = document.getElementById('hourlyChartContainer');
+        if (!chartContainer) return;
+        chartContainer.innerHTML = '';
+
+        const coversList = currentAnalytics.hourlyCovers || [];
+        const maxRev = Math.max(...coversList.map(c => c.revenue), 60000);
+        const maxCovers = Math.max(...coversList.map(c => c.covers), 80);
+
+        coversList.forEach((slot, index) => {
+          const revHeight = Math.min(100, Math.max(15, Math.round((slot.revenue / maxRev) * 100)));
+          const covHeight = Math.min(100, Math.max(15, Math.round((slot.covers / maxCovers) * 100)));
+          const isPeak = slot.isPeak;
+
+          const barItem = document.createElement('div');
+          barItem.className = 'bar-track flex-1 min-w-[54px] flex flex-col items-center gap-2 group relative';
+          barItem.innerHTML = `
+            <div class="text-[10px] ${isPeak ? 'text-amber-300 font-bold' : 'text-white'} opacity-0 group-hover:opacity-100 transition absolute -top-8 whitespace-nowrap bg-surface-container-high px-2 py-0.5 rounded shadow z-10 flex items-center gap-1.5">
+              <span>₹${slot.revenue.toLocaleString('en-IN')} · ${slot.covers}c ${isPeak ? '(Peak)' : ''}</span>
+              <button onclick="removeHourlySlot(${index})" class="text-rose-400 hover:text-white text-xs font-bold" title="Delete Slot">×</button>
+            </div>
+            <div class="w-full max-w-[42px] flex items-end justify-center gap-1 h-44">
+              <div class="bar-fill w-1/2 ${isPeak ? 'bg-sky-400 shadow-[0_0_12px_rgba(56,189,248,0.5)]' : 'bg-sky-400/80'} rounded-t" style="height: ${covHeight}%;" title="Covers: ${slot.covers}"></div>
+              <div class="bar-fill w-1/2 ${isPeak ? 'bg-gradient-to-t from-primary-container to-amber-300 shadow-glow' : 'bg-primary-container'} rounded-t" style="height: ${revHeight}%;" title="Revenue: ₹${slot.revenue.toLocaleString('en-IN')}"></div>
+            </div>
+            <span class="${isPeak ? 'text-primary font-bold' : 'text-outline'} flex items-center gap-0.5">
+              ${slot.hour}${isPeak ? '*' : ''}
+            </span>
+          `;
+          chartContainer.appendChild(barItem);
+        });
+      }
+
+      function openAddHourlyModal() { document.getElementById('addHourlyModal').classList.remove('hidden'); }
+      function closeAddHourlyModal() { document.getElementById('addHourlyModal').classList.add('hidden'); }
+
+      function handleCreateHourly(e) {
+        e.preventDefault();
+        const hour = document.getElementById('newHourSlot').value.trim();
+        const revenue = parseFloat(document.getElementById('newHourRev').value) || 0;
+        const covers = parseInt(document.getElementById('newHourCovers').value) || 0;
+        const isPeak = document.getElementById('newHourPeak').checked;
+
+        if (!currentAnalytics.hourlyCovers) currentAnalytics.hourlyCovers = [];
+        const newSlot = { hour, revenue, covers, isPeak };
+        currentAnalytics.hourlyCovers.push(newSlot);
+        
+        DB.saveAnalytics(currentAnalytics);
+        closeAddHourlyModal();
+        renderAnalytics();
+        showToast(`Added ${hour} forecast (₹${revenue.toLocaleString('en-IN')}, ${covers} covers) to Analytics!`, 'success');
+      }
+
+      function removeHourlySlot(index) {
+        if (confirm(`Remove hourly forecast slot at ${currentAnalytics.hourlyCovers[index].hour}?`)) {
+          currentAnalytics.hourlyCovers.splice(index, 1);
+          DB.saveAnalytics(currentAnalytics);
+          renderAnalytics();
+          showToast('Hourly forecast slot removed', 'info');
+        }
+      }
+
+      function saveAllAnalyticsModifications() {
+        const btn = document.getElementById('saveAnalyticsBtn');
+        const oldContent = btn.innerHTML;
+        btn.innerHTML = `<span class="material-symbols-outlined text-base animate-spin">refresh</span><span>Saving...</span>`;
+        btn.disabled = true;
+
+        setTimeout(() => {
+          DB.saveAnalytics(currentAnalytics);
+          btn.innerHTML = `<span class="material-symbols-outlined text-base font-bold text-slate-950">done_all</span><span>All Saved!</span>`;
+          btn.className = 'flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-emerald-400 text-slate-950 text-xs font-extrabold shadow-lg transition';
+          showToast('All Analytics KPIs, Hourly Forecasts & ₹ P&L Targets Saved to Database!', 'success');
+
+          setTimeout(() => {
+            btn.innerHTML = oldContent;
+            btn.className = 'flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-secondary text-slate-950 text-xs font-extrabold shadow-sm hover:brightness-110 transition';
+            btn.disabled = false;
+          }, 1800);
+        }, 400);
+      }
+
+      function setDateRange(range) {
+        document.querySelectorAll('.range-btn').forEach(btn => {
+          if (btn.getAttribute('data-range') === range) {
+            btn.className = 'range-btn px-3.5 py-1.5 rounded-xl bg-primary-container text-slate-950 font-bold text-xs flex items-center gap-1.5';
+          } else {
+            btn.className = 'range-btn px-3.5 py-1.5 rounded-xl hover:bg-surface-container text-slate-400 hover:text-white text-xs font-semibold';
+          }
+        });
+
+        if (range === 'today') {
+          currentAnalytics = DB.getAnalytics();
+          renderAnalytics();
+          showToast('Loaded Today: Dinner Service (Real-time INR)', 'success');
+        } else if (range === 'yesterday') {
+          document.getElementById('kpiMargin').textContent = '34.8%';
+          document.getElementById('kpiRevenue').textContent = '₹2,12,400';
+          showToast('Loaded Yesterday Comparison Data (₹)', 'info');
+        } else if (range === 'week') {
+          document.getElementById('kpiMargin').textContent = '37.1%';
+          document.getElementById('kpiRevenue').textContent = '₹14,28,000';
+          showToast('Loaded Last 7 Days Rolling Telemetry (₹14.28L)', 'info');
+        } else if (range === 'month') {
+          document.getElementById('kpiMargin').textContent = '38.0%';
+          document.getElementById('kpiRevenue').textContent = '₹58,45,000';
+          showToast('Loaded Month-to-Date Executive Figures (₹58.45L)', 'info');
+        }
+      }
+
+      function triggerPosSync() {
+        const btn = document.getElementById('posSyncBtn');
+        btn.innerHTML = `<span class="material-symbols-outlined text-base animate-spin">refresh</span><span>Syncing...</span>`;
+        btn.disabled = true;
+
+        setTimeout(() => {
+          btn.innerHTML = `<span class="material-symbols-outlined text-base font-bold">sync</span><span>Sync</span>`;
+          btn.disabled = false;
+          showToast('Petpooja POS & Zomato/Swiggy synchronized in Rupees', 'success');
+        }, 1200);
+      }
+
+      function openZReport() { document.getElementById('zReportModal').classList.remove('hidden'); }
+      function closeZReport() { document.getElementById('zReportModal').classList.add('hidden'); }
+
+      function exportReport() {
+        showToast('Generated Executive ₹ P&L PDF export', 'success');
+      }
+
+      function showToast(message, type = 'success') {
+        const container = document.getElementById('toastContainer');
+        const toast = document.createElement('div');
+        const colorClass = type === 'success' ? 'border-emerald-500/40 text-emerald-300' :
+                           type === 'warning' ? 'border-amber-500/40 text-amber-300' : 'border-sky-500/40 text-sky-300';
+        
+        toast.className = `p-3 rounded-xl bg-surface-container-high/95 backdrop-blur-md border ${colorClass} shadow-xl text-xs font-semibold flex items-center gap-2 pointer-events-auto transform transition-all duration-300 translate-y-3 opacity-0`;
+        toast.innerHTML = `
+          <span class="material-symbols-outlined text-base">${type === 'success' ? 'check_circle' : 'info'}</span>
+          <span>${message}</span>
+        `;
+        container.appendChild(toast);
+
+        setTimeout(() => toast.classList.remove('translate-y-3', 'opacity-0'), 10);
+        setTimeout(() => {
+          toast.classList.add('translate-y-3', 'opacity-0');
+          setTimeout(() => toast.remove(), 300);
+        }, 3000);
+      }
+
+      // Initialize dynamic analytics on load
+      renderAnalytics();
+    </script>
+  </body>
+</html>

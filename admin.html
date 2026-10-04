@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Operations Admin & Data Editor | SavoryPulse India</title>
+    <meta name="description" content="Central manager panel to modify inventory, sales records, analytics targets, and menus with full Add and Save All controls." />
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              background: '#0b1326',
+              surface: '#0b1326',
+              'surface-container-lowest': '#060e20',
+              'surface-container-low': '#131b2e',
+              'surface-container': '#171f33',
+              'surface-container-high': '#222a3d',
+              'surface-container-highest': '#2d3449',
+              'on-surface': '#dae2fd',
+              'on-surface-variant': '#d8c3ad',
+              outline: '#a08e7a',
+              primary: '#ffc174',
+              'primary-container': '#f59e0b',
+              secondary: '#4edea3',
+              tertiary: '#8ed5ff',
+              error: '#ffb4ab'
+            },
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+              display: ['Plus Jakarta Sans', 'sans-serif'],
+              mono: ['JetBrains Mono', 'monospace']
+            }
+          }
+        }
+      };
+    </script>
+    <style>
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background: #060e20;
+        color: #dae2fd;
+        font-family: 'Inter', sans-serif;
+      }
+      .font-display { font-family: 'Plus Jakarta Sans', sans-serif; }
+      .glass-card {
+        background: #131b2e;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      .input-box {
+        background: #171f33;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        color: #dae2fd;
+        padding: 0.45rem 0.75rem;
+        border-radius: 0.65rem;
+        font-size: 0.825rem;
+        outline: none;
+        transition: all 0.2s ease;
+      }
+      .input-box:focus {
+        border-color: #f59e0b;
+        box-shadow: 0 0 10px rgba(245, 158, 11, 0.25);
+      }
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+    </style>
+  </head>
+  <body class="min-h-screen antialiased flex flex-col selection:bg-primary-container selection:text-on-primary">
+    
+    <!-- HEADER -->
+    <header class="bg-surface-container-lowest border-b border-white/5 px-4 py-3 flex items-center justify-between sticky top-0 z-40">
+      
+      <!-- Brand & Title -->
+      <div class="flex items-center gap-3.5">
+        <a href="index.html" class="flex items-center gap-2.5 group">
+          <div class="h-9 w-9 rounded-xl bg-gradient-to-br from-amber-300 via-primary-container to-amber-600 text-slate-950 flex items-center justify-center font-bold shadow-[0_0_14px_rgba(245,158,11,0.4)]">
+            <span class="material-symbols-outlined text-xl">tune</span>
+          </div>
+          <div>
+            <div class="font-display text-sm font-extrabold text-white tracking-tight leading-none group-hover:text-primary transition">SavoryPulse Admin</div>
+            <div class="text-[9px] uppercase tracking-wider text-outline font-semibold leading-none mt-1">Central Operations &amp; Data Editor</div>
+          </div>
+        </a>
+
+        <div class="h-5 w-px bg-white/10 mx-1 hidden sm:block"></div>
+
+        <!-- Navigation Links -->
+        <nav class="hidden md:flex items-center gap-1 text-xs">
+          <a href="index.html" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-surface-container transition">Overview</a>
+          <a href="dispatch.html" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-surface-container transition">Live Dispatch</a>
+          <a href="analytics.html" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-surface-container transition">Analytics (₹)</a>
+          <a href="inventory.html" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-surface-container transition">Inventory</a>
+          <a href="menu.html" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-surface-container transition">Digital Menu</a>
+          <a href="sales.html" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-surface-container transition">Sales (₹)</a>
+          <a href="admin.html" class="px-3 py-1.5 rounded-lg bg-primary-container text-slate-950 font-bold flex items-center gap-1">
+            <span class="material-symbols-outlined text-sm">edit_note</span>
+            <span>Data Control Panel</span>
+          </a>
+        </nav>
+      </div>
+
+      <!-- Action Cluster -->
+      <div class="flex items-center gap-2.5">
+        <button onclick="resetAllDefaults()" class="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-surface-container hover:bg-surface-bright text-xs text-outline hover:text-white transition">
+          <span class="material-symbols-outlined text-sm">restart_alt</span>
+          <span>Reset Defaults</span>
+        </button>
+
+        <button onclick="saveAllMasterData()" class="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-amber-400 to-primary-container text-slate-950 text-xs font-black shadow-lg hover:brightness-110 transition">
+          <span class="material-symbols-outlined text-base font-bold">save</span>
+          <span>SAVE ALL PANELS</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- CONTENT WRAPPER -->
+    <main class="flex-1 max-w-[1600px] w-full mx-auto p-4 sm:p-6 space-y-6">
+      
+      <!-- TOP STATUS BANNER -->
+      <div class="p-4 rounded-2xl bg-surface-container-low border border-primary/30 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-md">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-primary/20 text-primary flex items-center justify-center shrink-0">
+            <span class="material-symbols-outlined text-2xl">auto_fix_high</span>
+          </div>
+          <div>
+            <h1 class="font-display text-lg font-bold text-white">Live Data Editor &amp; Control Matrix</h1>
+            <p class="text-xs text-slate-300">Modify any inventory stock, sales checks, revenue goals, or dishes. Changes persist across all pages automatically.</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <span id="saveStatusBadge" class="px-3 py-1.5 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-bold flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-secondary"></span>
+            All Changes Saved to System
+          </span>
+        </div>
+      </div>
+
+      <!-- PANEL SELECTOR TABS -->
+      <div class="flex flex-wrap items-center gap-2 border-b border-white/5 pb-3">
+        <button onclick="switchTab('inventory')" id="tabBtn-inventory" class="tab-btn px-4 py-2 rounded-xl bg-primary-container text-slate-950 font-bold text-xs flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-base">inventory_2</span>
+          <span>1. Inventory Manager</span>
+        </button>
+        <button onclick="switchTab('sales')" id="tabBtn-sales" class="tab-btn px-4 py-2 rounded-xl hover:bg-surface-container text-slate-300 hover:text-white text-xs font-semibold flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-base">payments</span>
+          <span>2. Sales &amp; Bills Manager (₹)</span>
+        </button>
+        <button onclick="switchTab('analytics')" id="tabBtn-analytics" class="tab-btn px-4 py-2 rounded-xl hover:bg-surface-container text-slate-300 hover:text-white text-xs font-semibold flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-base">analytics</span>
+          <span>3. Analytics &amp; Hourly P&amp;L</span>
+        </button>
+        <button onclick="switchTab('menu')" id="tabBtn-menu" class="tab-btn px-4 py-2 rounded-xl hover:bg-surface-container text-slate-300 hover:text-white text-xs font-semibold flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-base">restaurant_menu</span>
+          <span>4. Indian Menu Catalog</span>
+        </button>
+      </div>
+
+      <!-- ==================== TAB 1: INVENTORY MANAGER ==================== -->
+      <section id="panel-inventory" class="tab-panel space-y-6">
+        
+        <!-- Add SKU Card -->
+        <div class="glass-card rounded-2xl p-5 space-y-4">
+          <div class="flex items-center justify-between pb-3 border-b border-white/5">
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-amber-400">add_circle</span>
+              <h3 class="font-display text-base font-bold text-white">Add New Ingredient / SKU Option</h3>
+            </div>
+            <span class="text-xs text-outline font-mono">Instant Injection to Cold Storage &amp; Dairy</span>
+          </div>
+
+          <form id="addSkuForm" onsubmit="handleAddSku(event)" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3 text-xs">
+            <div class="lg:col-span-2">
+              <label class="block text-outline font-semibold mb-1">Ingredient Name</label>
+              <input type="text" id="newSkuName" required placeholder="e.g. Kashmiri Morels (Gucchi)" class="input-box w-full" />
+            </div>
+            <div>
+              <label class="block text-outline font-semibold mb-1">Category</label>
+              <select id="newSkuCat" class="input-box w-full">
+                <option value="spices">Spices &amp; Saffron</option>
+                <option value="dairy">Dairy &amp; Paneer</option>
+                <option value="meats">Meats &amp; Seafood</option>
+                <option value="rice">Rice &amp; Dry Atta</option>
+                <option value="produce">Fresh Produce</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-outline font-semibold mb-1">Current On-Hand</label>
+              <input type="number" step="0.1" id="newSkuOnHand" required placeholder="10" class="input-box w-full" />
+            </div>
+            <div>
+              <label class="block text-outline font-semibold mb-1">Par Target &amp; Unit</label>
+              <div class="flex gap-1.5">
+                <input type="number" step="0.1" id="newSkuPar" required placeholder="25" class="input-box w-1/2" />
+                <input type="text" id="newSkuUnit" required placeholder="kg" value="kg" class="input-box w-1/2" />
+              </div>
+            </div>
+            <div>
+              <label class="block text-outline font-semibold mb-1">Unit Cost in ₹ (Rupees)</label>
+              <div class="flex gap-1.5">
+                <input type="number" step="1" id="newSkuPrice" required placeholder="650" class="input-box w-full" />
+                <button type="submit" class="px-4 py-1.5 rounded-xl bg-primary text-slate-950 font-bold hover:brightness-110 whitespace-nowrap">
+                  + Add SKU
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <!-- Inventory Editable Table -->
+        <div class="glass-card rounded-[28px] p-6 space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <h3 class="font-display text-lg font-bold text-white">Live Inventory Registry</h3>
+              <p class="text-xs text-slate-400">Edit values directly in the cells below, then click "Save Inventory".</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <button onclick="saveInventoryTab()" class="px-4 py-2 rounded-xl bg-secondary text-slate-950 font-bold text-xs hover:brightness-110 flex items-center gap-1.5 shadow-sm">
+                <span class="material-symbols-outlined text-base">save</span>
+                <span>Save Inventory Changes</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead>
+                <tr class="border-b border-white/5 text-[11px] uppercase tracking-wider text-outline font-mono">
+                  <th class="pb-2.5">SKU ID</th>
+                  <th class="pb-2.5">Ingredient Name</th>
+                  <th class="pb-2.5">Category</th>
+                  <th class="pb-2.5">Storage Bin / Location</th>
+                  <th class="pb-2.5 text-center">On-Hand</th>
+                  <th class="pb-2.5 text-center">Par Level</th>
+                  <th class="pb-2.5 text-right">Unit Price (₹)</th>
+                  <th class="pb-2.5 text-center">86 Out</th>
+                  <th class="pb-2.5 text-right">Action</th>
+                </tr>
+              </thead>
+              <tbody id="adminInventoryTableBody" class="divide-y border-white/5"></tbody>
+            </table>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ==================== TAB 2: SALES & BILLS MANAGER ==================== -->
+      <section id="panel-sales" class="tab-panel hidden space-y-6">
+        
+        <!-- Shift Targets & Key Financials Form -->
+        <div class="glass-card rounded-2xl p-5 space-y-4">
+          <div class="flex items-center justify-between pb-3 border-b border-white/5">
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-primary">currency_rupee</span>
+              <h3 class="font-display text-base font-bold text-white">Modify Shift Sales Goals &amp; Tax Options</h3>
+            </div>
+            <span class="text-xs text-outline font-mono">Updates Sales Dashboard &amp; Analytics</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 text-xs">
+            <div>
+              <label class="block text-outline font-semibold mb-1">Today's Gross Sales (₹)</label>
+              <input type="number" id="salesGrossToday" class="input-box w-full font-mono text-amber-300 font-bold" />
+            </div>
+            <div>
+              <label class="block text-outline font-semibold mb-1">Shift Target Sales (₹)</label>
+              <input type="number" id="salesTargetToday" class="input-box w-full font-mono" />
+            </div>
+            <div>
+              <label class="block text-outline font-semibold mb-1">Tips Realized (₹)</label>
+              <input type="number" id="salesTipsToday" class="input-box w-full font-mono text-emerald-400 font-bold" />
+            </div>
+            <div>
+              <label class="block text-outline font-semibold mb-1">GST Tax Rate (%)</label>
+              <input type="number" step="0.5" id="salesGstRate" class="input-box w-full font-mono" />
+            </div>
+            <div>
+              <label class="block text-outline font-semibold mb-1">Service Charge (%)</label>
+              <input type="number" step="0.5" id="salesServiceCharge" class="input-box w-full font-mono" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Add New Bill / Guest Check -->
+        <div class="glass-card rounded-2xl p-5 space-y-4">
+          <div class="flex items-center justify-between pb-3 border-b border-white/5">
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-secondary">receipt</span>
+              <h3 class="font-display text-base font-bold text-white">+ Add New Guest Bill / Sale Check</h3>
+            </div>
+            <span class="text-xs text-outline font-mono">Simulate Paid Dining Table or Aggregator Order</span>
+          </div>
+
+          <form id="addBillForm" onsubmit="handleAddBill(event)" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3 text-xs">
+            <div>
+              <label class="block text-outline font-semibold mb-1">Table / Source</label>
+              <input type="text" id="newBillTable" required placeholder="Table 9 (Patio)" class="input-box w-full" />
+            </div>
+            <div>
+              <label class="block text-outline font-semibold mb-1">Captain / Steward</label>
+              <input type="text" id="newBillCaptain" placeholder="Ramesh S." value="Ramesh S." class="input-box w-full" />
+            </div>
+            <div>
+              <label class="block text-outline font-semibold mb-1">Items Count</label>
+              <input type="number" id="newBillItems" value="4" class="input-box w-full font-mono" />
+            </div>
+            <div>
+              <label class="block text-outline font-semibold mb-1">Total Bill in ₹ (Rupees)</label>
+              <input type="number" id="newBillTotal" required placeholder="3850" class="input-box w-full font-mono text-amber-300 font-bold" />
+            </div>
+            <div>
+              <label class="block text-outline font-semibold mb-1">Tip Amount (₹)</label>
+              <input type="number" id="newBillTip" value="500" class="input-box w-full font-mono text-emerald-400" />
+            </div>
+            <div>
+              <label class="block text-outline font-semibold mb-1">Payment Method</label>
+              <div class="flex gap-1.5">
+                <select id="newBillMethod" class="input-box w-full">
+                  <option value="UPI (PhonePe)">UPI (PhonePe)</option>
+                  <option value="UPI (GPay)">UPI (GPay)</option>
+                  <option value="Pine Labs Card">Pine Labs Card</option>
+                  <option value="Cash">Cash</option>
+                </select>
+                <button type="submit" class="px-4 py-1.5 rounded-xl bg-secondary text-slate-950 font-bold hover:brightness-110 whitespace-nowrap">
+                  + Add Bill
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <!-- Sales Bills Table -->
+        <div class="glass-card rounded-[28px] p-6 space-y-4">
+          <div class="flex items-center justify-between">
+            <h3 class="font-display text-lg font-bold text-white">Closed Guest Bills Registry</h3>
+            <button onclick="saveSalesTab()" class="px-4 py-2 rounded-xl bg-secondary text-slate-950 font-bold text-xs hover:brightness-110 flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-base">save</span>
+              <span>Save Sales Changes</span>
+            </button>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs font-sans">
+              <thead>
+                <tr class="border-b border-white/5 text-[11px] uppercase tracking-wider text-outline font-mono">
+                  <th class="pb-2.5">Bill #</th>
+                  <th class="pb-2.5">Table / Source</th>
+                  <th class="pb-2.5">Captain</th>
+                  <th class="pb-2.5 text-center">Items</th>
+                  <th class="pb-2.5 text-right">Total (₹)</th>
+                  <th class="pb-2.5 text-right">Tip (₹)</th>
+                  <th class="pb-2.5">Payment Method</th>
+                  <th class="pb-2.5 text-right">Action</th>
+                </tr>
+              </thead>
+              <tbody id="adminSalesTableBody" class="divide-y border-white/5 font-mono"></tbody>
+            </table>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ==================== TAB 3: ANALYTICS & HOURLY P&L ==================== -->
+      <section id="panel-analytics" class="tab-panel hidden space-y-6">
+        
+        <!-- Analytics Targets Matrix -->
+        <div class="glass-card rounded-2xl p-5 space-y-4">
+          <div class="flex items-center justify-between pb-3 border-b border-white/5">
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-tertiary">analytics</span>
+              <h3 class="font-display text-base font-bold text-white">Modify Key Executive Targets</h3>
+            </div>
+            <button onclick="saveAnalyticsTab()" class="px-4 py-1.5 rounded-xl bg-secondary text-slate-950 font-bold text-xs hover:brightness-110 flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-sm">save</span>
+              <span>Save Analytics</span>
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
+            <div>
+              <label class="block text-outline font-semibold mb-1">Realized Gross Margin (%)</label>
+              <input type="number" step="0.1" id="targetGrossMargin" class="input-box w-full font-mono text-emerald-400 font-bold" />
+            </div>
+            <div>
+              <label class="block text-outline font-semibold mb-1">Target Baseline Margin (%)</label>
+              <input type="number" step="0.1" id="targetBaselineMargin" class="input-box w-full font-mono" />
+            </div>
+            <div>
+              <label class="block text-outline font-semibold mb-1">Avg Table Turnover (min)</label>
+              <input type="number" id="targetTurnoverTime" class="input-box w-full font-mono" />
+            </div>
+            <div>
+              <label class="block text-outline font-semibold mb-1">Food Cost Ratio (%)</label>
+              <input type="number" step="0.1" id="targetFoodCost" class="input-box w-full font-mono text-emerald-400 font-bold" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Hourly Covers Table -->
+        <div class="glass-card rounded-[28px] p-6 space-y-4">
+          <div class="flex items-center justify-between pb-2 border-b border-white/5">
+            <div>
+              <h3 class="font-display text-lg font-bold text-white">Hourly Covers &amp; Revenue Projection (₹)</h3>
+              <p class="text-xs text-slate-400">Controls the dynamic bar chart displayed on the Analytics dashboard.</p>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs font-mono">
+              <thead>
+                <tr class="border-b border-white/5 text-[11px] uppercase tracking-wider text-outline">
+                  <th class="pb-2.5">Time Slot</th>
+                  <th class="pb-2.5 text-right">Projected Revenue (₹)</th>
+                  <th class="pb-2.5 text-right">Seated Covers</th>
+                  <th class="pb-2.5 text-center">Peak Hour Status</th>
+                </tr>
+              </thead>
+              <tbody id="adminHourlyTableBody" class="divide-y border-white/5"></tbody>
+            </table>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ==================== TAB 4: MENU CATALOG ==================== -->
+      <section id="panel-menu" class="tab-panel hidden space-y-6">
+        
+        <!-- Add Dish Form -->
+        <div class="glass-card rounded-2xl p-5 space-y-4">
+          <div class="flex items-center justify-between pb-3 border-b border-white/5">
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-pink-400">add_circle</span>
+              <h3 class="font-display text-base font-bold text-white">+ Add New Indian Culinary Signature</h3>
+            </div>
+            <span class="text-xs text-outline font-mono">Instant Push to Digital Menu &amp; POS</span>
+          </div>
+
+          <form id="addMenuForm" onsubmit="handleAddMenuDish(event)" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3 text-xs">
+            <div class="lg:col-span-2">
+              <label class="block text-outline font-semibold mb-1">Dish Name</label>
+              <input type="text" id="newMenuName" required placeholder="e.g. Kakori Kebab with Sheermal" class="input-box w-full" />
+            </div>
+            <div>
+              <label class="block text-outline font-semibold mb-1">Course Category</label>
+              <select id="newMenuCourse" class="input-box w-full">
+                <option value="curries">Curries &amp; Dal</option>
+                <option value="biryanis">Awadhi Dum Biryani</option>
+                <option value="tandoor">Tandoor &amp; Sigri</option>
+                <option value="mithai">Mithai &amp; Desserts</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-outline font-semibold mb-1">Kitchen Station</label>
+              <input type="text" id="newMenuStation" placeholder="Station 1 Clay Tandoor" value="Station 1 Clay Tandoor" class="input-box w-full" />
+            </div>
+            <div>
+              <label class="block text-outline font-semibold mb-1">Price in ₹ (Rupees)</label>
+              <input type="number" id="newMenuPrice" required placeholder="650" class="input-box w-full font-mono text-amber-300 font-bold" />
+            </div>
+            <div>
+              <label class="block text-outline font-semibold mb-1">Food Cost %</label>
+              <div class="flex gap-1.5">
+                <input type="number" step="0.5" id="newMenuCost" value="22.5" class="input-box w-full font-mono" />
+                <button type="submit" class="px-4 py-1.5 rounded-xl bg-pink-400 text-slate-950 font-bold hover:brightness-110 whitespace-nowrap">
+                  + Add Dish
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <!-- Menu Dishes Table -->
+        <div class="glass-card rounded-[28px] p-6 space-y-4">
+          <div class="flex items-center justify-between">
+            <h3 class="font-display text-lg font-bold text-white">Active Dishes Registry</h3>
+            <button onclick="saveMenuTab()" class="px-4 py-2 rounded-xl bg-secondary text-slate-950 font-bold text-xs hover:brightness-110 flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-base">save</span>
+              <span>Save Menu Changes</span>
+            </button>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs font-sans">
+              <thead>
+                <tr class="border-b border-white/5 text-[11px] uppercase tracking-wider text-outline font-mono">
+                  <th class="pb-2.5">ID</th>
+                  <th class="pb-2.5">Dish Name</th>
+                  <th class="pb-2.5">Course</th>
+                  <th class="pb-2.5">Station</th>
+                  <th class="pb-2.5 text-right">Price in ₹</th>
+                  <th class="pb-2.5 text-right">Cost %</th>
+                  <th class="pb-2.5 text-center">86 Lock</th>
+                  <th class="pb-2.5 text-right">Action</th>
+                </tr>
+              </thead>
+              <tbody id="adminMenuTableBody" class="divide-y border-white/5"></tbody>
+            </table>
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+
+    <!-- TOAST CONTAINER -->
+    <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- SCRIPT LOGIC WITH DB INTEGRATION -->
+    <script src="assets/data.js"></script>
+    <script>
+      let currentTab = 'inventory';
+
+      function switchTab(tabId) {
+        currentTab = tabId;
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.add('hidden'));
+        document.getElementById(`panel-${tabId}`).classList.remove('hidden');
+
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+          btn.className = 'tab-btn px-4 py-2 rounded-xl hover:bg-surface-container text-slate-300 hover:text-white text-xs font-semibold flex items-center gap-1.5';
+        });
+
+        const activeBtn = document.getElementById(`tabBtn-${tabId}`);
+        if (activeBtn) {
+          activeBtn.className = 'tab-btn px-4 py-2 rounded-xl bg-primary-container text-slate-950 font-bold text-xs flex items-center gap-1.5 shadow-sm';
+        }
+
+        loadActiveTabData();
+      }
+
+      function markUnsaved() {
+        const badge = document.getElementById('saveStatusBadge');
+        badge.className = 'px-3 py-1.5 rounded-full bg-amber-500/20 text-amber-300 text-xs font-bold flex items-center gap-1.5 animate-pulse';
+        badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-400"></span> Unsaved Changes Pending`;
+      }
+
+      function markSaved() {
+        const badge = document.getElementById('saveStatusBadge');
+        badge.className = 'px-3 py-1.5 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-bold flex items-center gap-1.5';
+        badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-secondary"></span> All Changes Saved to System`;
+      }
+
+      // ==================== INVENTORY TAB ====================
+      function renderInventoryTab() {
+        const items = DB.getInventory();
+        const tbody = document.getElementById('adminInventoryTableBody');
+        tbody.innerHTML = '';
+
+        items.forEach((item, index) => {
+          const tr = document.createElement('tr');
+          tr.className = 'hover:bg-surface-container/30';
+          tr.innerHTML = `
+            <td class="py-2.5 font-mono text-outline text-[11px]">${item.id}</td>
+            <td class="py-2.5">
+              <input type="text" value="${item.name}" oninput="markUnsaved()" data-inv-field="name" data-inv-idx="${index}" class="input-box w-56 font-bold text-white text-xs" />
+            </td>
+            <td class="py-2.5">
+              <select onchange="markUnsaved()" data-inv-field="cat" data-inv-idx="${index}" class="input-box text-xs">
+                <option value="spices" ${item.cat === 'spices' ? 'selected' : ''}>Spices & Saffron</option>
+                <option value="dairy" ${item.cat === 'dairy' ? 'selected' : ''}>Dairy & Paneer</option>
+                <option value="meats" ${item.cat === 'meats' ? 'selected' : ''}>Meats & Seafood</option>
+                <option value="rice" ${item.cat === 'rice' ? 'selected' : ''}>Rice & Atta</option>
+                <option value="produce" ${item.cat === 'produce' ? 'selected' : ''}>Produce</option>
+              </select>
+            </td>
+            <td class="py-2.5">
+              <input type="text" value="${item.location}" oninput="markUnsaved()" data-inv-field="location" data-inv-idx="${index}" class="input-box w-48 text-xs text-slate-300" />
+            </td>
+            <td class="py-2.5 text-center">
+              <input type="number" step="0.1" value="${item.onHand}" oninput="markUnsaved()" data-inv-field="onHand" data-inv-idx="${index}" class="input-box w-20 text-center font-mono font-bold text-white" />
+            </td>
+            <td class="py-2.5 text-center">
+              <input type="number" step="0.1" value="${item.par}" oninput="markUnsaved()" data-inv-field="par" data-inv-idx="${index}" class="input-box w-20 text-center font-mono text-slate-300" />
+            </td>
+            <td class="py-2.5 text-right">
+              <input type="number" step="1" value="${item.price}" oninput="markUnsaved()" data-inv-field="price" data-inv-idx="${index}" class="input-box w-24 text-right font-mono font-bold text-amber-300" />
+            </td>
+            <td class="py-2.5 text-center">
+              <input type="checkbox" ${item.is86 ? 'checked' : ''} onchange="markUnsaved()" data-inv-field="is86" data-inv-idx="${index}" class="w-4 h-4 rounded text-primary focus:ring-0 cursor-pointer" />
+            </td>
+            <td class="py-2.5 text-right">
+              <button onclick="deleteInventoryItem(${index})" class="p-1 rounded text-outline hover:text-rose-400 hover:bg-rose-500/10 transition" title="Delete SKU">
+                <span class="material-symbols-outlined text-base">delete</span>
+              </button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
+
+      function handleAddSku(e) {
+        e.preventDefault();
+        const item = {
+          name: document.getElementById('newSkuName').value,
+          cat: document.getElementById('newSkuCat').value,
+          location: 'Cold Storage Shelf 1',
+          onHand: parseFloat(document.getElementById('newSkuOnHand').value) || 0,
+          par: parseFloat(document.getElementById('newSkuPar').value) || 10,
+          unit: document.getElementById('newSkuUnit').value || 'kg',
+          price: parseFloat(document.getElementById('newSkuPrice').value) || 100,
+          is86: false
+        };
+        DB.addInventoryItem(item);
+        document.getElementById('addSkuForm').reset();
+        renderInventoryTab();
+        markSaved();
+        showToast(`Added SKU: ${item.name} into inventory!`, 'success');
+      }
+
+      function deleteInventoryItem(index) {
+        const items = DB.getInventory();
+        const deleted = items.splice(index, 1);
+        DB.saveInventory(items);
+        renderInventoryTab();
+        markSaved();
+        showToast(`Removed ${deleted[0]?.name || 'item'}`, 'info');
+      }
+
+      function saveInventoryTab() {
+        const items = DB.getInventory();
+        document.querySelectorAll('[data-inv-field]').forEach(input => {
+          const idx = parseInt(input.getAttribute('data-inv-idx'));
+          const field = input.getAttribute('data-inv-field');
+          if (items[idx]) {
+            if (field === 'is86') {
+              items[idx][field] = input.checked;
+            } else if (field === 'onHand' || field === 'par' || field === 'price') {
+              items[idx][field] = parseFloat(input.value) || 0;
+            } else {
+              items[idx][field] = input.value;
+            }
+          }
+        });
+        DB.saveInventory(items);
+        markSaved();
+        showToast('All inventory records saved successfully!', 'success');
+      }
+
+      // ==================== SALES TAB ====================
+      function renderSalesTab() {
+        const sales = DB.getSales();
+        document.getElementById('salesGrossToday').value = sales.todayGross;
+        document.getElementById('salesTargetToday').value = sales.todayTarget;
+        document.getElementById('salesTipsToday').value = sales.tipsRealized;
+        document.getElementById('salesGstRate').value = sales.gstRate;
+        document.getElementById('salesServiceCharge').value = sales.serviceChargeRate;
+
+        const tbody = document.getElementById('adminSalesTableBody');
+        tbody.innerHTML = '';
+
+        sales.checks.forEach((chk, index) => {
+          const tr = document.createElement('tr');
+          tr.className = 'hover:bg-surface-container/30';
+          tr.innerHTML = `
+            <td class="py-2.5 font-bold text-white text-[11px]">${chk.id}</td>
+            <td class="py-2.5 font-sans">
+              <input type="text" value="${chk.table}" oninput="markUnsaved()" data-sales-field="table" data-sales-idx="${index}" class="input-box w-44 text-xs font-semibold text-white" />
+            </td>
+            <td class="py-2.5 font-sans">
+              <input type="text" value="${chk.captain}" oninput="markUnsaved()" data-sales-field="captain" data-sales-idx="${index}" class="input-box w-36 text-xs text-slate-300" />
+            </td>
+            <td class="py-2.5 text-center">
+              <input type="number" value="${chk.itemsCount}" oninput="markUnsaved()" data-sales-field="itemsCount" data-sales-idx="${index}" class="input-box w-16 text-center text-xs text-white" />
+            </td>
+            <td class="py-2.5 text-right">
+              <input type="number" value="${chk.total}" oninput="markUnsaved()" data-sales-field="total" data-sales-idx="${index}" class="input-box w-28 text-right font-mono font-bold text-amber-300 text-xs" />
+            </td>
+            <td class="py-2.5 text-right">
+              <input type="number" value="${chk.tip}" oninput="markUnsaved()" data-sales-field="tip" data-sales-idx="${index}" class="input-box w-20 text-right font-mono font-bold text-emerald-400 text-xs" />
+            </td>
+            <td class="py-2.5 font-sans">
+              <select onchange="markUnsaved()" data-sales-field="method" data-sales-idx="${index}" class="input-box text-xs">
+                <option value="UPI (PhonePe)" ${chk.method.includes('PhonePe') ? 'selected' : ''}>UPI (PhonePe)</option>
+                <option value="UPI (GPay)" ${chk.method.includes('GPay') ? 'selected' : ''}>UPI (GPay)</option>
+                <option value="Pine Labs Card" ${chk.method.includes('Card') ? 'selected' : ''}>Pine Labs Card</option>
+                <option value="Cash" ${chk.method === 'Cash' ? 'selected' : ''}>Cash</option>
+              </select>
+            </td>
+            <td class="py-2.5 text-right">
+              <button onclick="deleteBillItem(${index})" class="p-1 rounded text-outline hover:text-rose-400 hover:bg-rose-500/10 transition" title="Delete Check">
+                <span class="material-symbols-outlined text-base">delete</span>
+              </button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
+
+      function handleAddBill(e) {
+        e.preventDefault();
+        const check = {
+          table: document.getElementById('newBillTable').value,
+          captain: document.getElementById('newBillCaptain').value || 'Captain',
+          itemsCount: parseInt(document.getElementById('newBillItems').value) || 4,
+          total: parseFloat(document.getElementById('newBillTotal').value) || 0,
+          tip: parseFloat(document.getElementById('newBillTip').value) || 0,
+          method: document.getElementById('newBillMethod').value,
+          status: 'Paid'
+        };
+        DB.addCheck(check);
+        document.getElementById('addBillForm').reset();
+        renderSalesTab();
+        markSaved();
+        showToast(`Added bill of ₹${check.total} to sales!`, 'success');
+      }
+
+      function deleteBillItem(index) {
+        const sales = DB.getSales();
+        sales.checks.splice(index, 1);
+        DB.saveSales(sales);
+        renderSalesTab();
+        markSaved();
+        showToast('Bill removed from ledger', 'info');
+      }
+
+      function saveSalesTab() {
+        const sales = DB.getSales();
+        sales.todayGross = parseFloat(document.getElementById('salesGrossToday').value) || 0;
+        sales.todayTarget = parseFloat(document.getElementById('salesTargetToday').value) || 0;
+        sales.tipsRealized = parseFloat(document.getElementById('salesTipsToday').value) || 0;
+        sales.gstRate = parseFloat(document.getElementById('salesGstRate').value) || 5.0;
+        sales.serviceChargeRate = parseFloat(document.getElementById('salesServiceCharge').value) || 5.0;
+
+        document.querySelectorAll('[data-sales-field]').forEach(input => {
+          const idx = parseInt(input.getAttribute('data-sales-idx'));
+          const field = input.getAttribute('data-sales-field');
+          if (sales.checks[idx]) {
+            if (field === 'total' || field === 'tip' || field === 'itemsCount') {
+              sales.checks[idx][field] = parseFloat(input.value) || 0;
+            } else {
+              sales.checks[idx][field] = input.value;
+            }
+          }
+        });
+
+        DB.saveSales(sales);
+        markSaved();
+        showToast('All sales targets & bills updated in Rupees!', 'success');
+      }
+
+      // ==================== ANALYTICS TAB ====================
+      function renderAnalyticsTab() {
+        const a = DB.getAnalytics();
+        document.getElementById('targetGrossMargin').value = a.grossMargin;
+        document.getElementById('targetBaselineMargin').value = a.targetMargin;
+        document.getElementById('targetTurnoverTime').value = a.tableTurnTime;
+        document.getElementById('targetFoodCost').value = a.foodCostRatio;
+
+        const tbody = document.getElementById('adminHourlyTableBody');
+        tbody.innerHTML = '';
+
+        a.hourlyCovers.forEach((h, index) => {
+          const tr = document.createElement('tr');
+          tr.className = 'hover:bg-surface-container/30';
+          tr.innerHTML = `
+            <td class="py-2.5 font-bold text-white">${h.hour}</td>
+            <td class="py-2.5 text-right">
+              <input type="number" step="500" value="${h.revenue}" oninput="markUnsaved()" data-hour-field="revenue" data-hour-idx="${index}" class="input-box w-32 text-right font-bold text-amber-300" />
+            </td>
+            <td class="py-2.5 text-right">
+              <input type="number" value="${h.covers}" oninput="markUnsaved()" data-hour-field="covers" data-hour-idx="${index}" class="input-box w-20 text-right font-bold text-sky-400" />
+            </td>
+            <td class="py-2.5 text-center">
+              <input type="checkbox" ${h.isPeak ? 'checked' : ''} onchange="markUnsaved()" data-hour-field="isPeak" data-hour-idx="${index}" class="w-4 h-4 rounded text-primary focus:ring-0 cursor-pointer" />
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
+
+      function saveAnalyticsTab() {
+        const a = DB.getAnalytics();
+        a.grossMargin = parseFloat(document.getElementById('targetGrossMargin').value) || 36.4;
+        a.targetMargin = parseFloat(document.getElementById('targetBaselineMargin').value) || 34.0;
+        a.tableTurnTime = parseFloat(document.getElementById('targetTurnoverTime').value) || 48;
+        a.foodCostRatio = parseFloat(document.getElementById('targetFoodCost').value) || 25.8;
+
+        document.querySelectorAll('[data-hour-field]').forEach(input => {
+          const idx = parseInt(input.getAttribute('data-hour-idx'));
+          const field = input.getAttribute('data-hour-field');
+          if (a.hourlyCovers[idx]) {
+            if (field === 'isPeak') {
+              a.hourlyCovers[idx][field] = input.checked;
+            } else {
+              a.hourlyCovers[idx][field] = parseFloat(input.value) || 0;
+            }
+          }
+        });
+
+        DB.saveAnalytics(a);
+        markSaved();
+        showToast('Saved all executive analytics & cover projections!', 'success');
+      }
+
+      // ==================== MENU TAB ====================
+      function renderMenuTab() {
+        const menu = DB.getMenu();
+        const tbody = document.getElementById('adminMenuTableBody');
+        tbody.innerHTML = '';
+
+        menu.forEach((dish, index) => {
+          const tr = document.createElement('tr');
+          tr.className = 'hover:bg-surface-container/30';
+          tr.innerHTML = `
+            <td class="py-2.5 font-mono text-outline text-[11px]">${dish.id}</td>
+            <td class="py-2.5">
+              <input type="text" value="${dish.name}" oninput="markUnsaved()" data-menu-field="name" data-menu-idx="${index}" class="input-box w-56 font-bold text-white text-xs" />
+            </td>
+            <td class="py-2.5">
+              <select onchange="markUnsaved()" data-menu-field="course" data-menu-idx="${index}" class="input-box text-xs">
+                <option value="curries" ${dish.course === 'curries' ? 'selected' : ''}>Curries & Dal</option>
+                <option value="biryanis" ${dish.course === 'biryanis' ? 'selected' : ''}>Awadhi Dum Biryani</option>
+                <option value="tandoor" ${dish.course === 'tandoor' ? 'selected' : ''}>Tandoor & Sigri</option>
+                <option value="mithai" ${dish.course === 'mithai' ? 'selected' : ''}>Mithai & Desserts</option>
+              </select>
+            </td>
+            <td class="py-2.5">
+              <input type="text" value="${dish.station}" oninput="markUnsaved()" data-menu-field="station" data-menu-idx="${index}" class="input-box w-44 text-xs text-slate-300" />
+            </td>
+            <td class="py-2.5 text-right">
+              <input type="number" step="10" value="${dish.price}" oninput="markUnsaved()" data-menu-field="price" data-menu-idx="${index}" class="input-box w-24 text-right font-mono font-bold text-amber-300 text-xs" />
+            </td>
+            <td class="py-2.5 text-right">
+              <input type="number" step="0.5" value="${dish.cost}" oninput="markUnsaved()" data-menu-field="cost" data-menu-idx="${index}" class="input-box w-20 text-right font-mono text-emerald-400 text-xs" />
+            </td>
+            <td class="py-2.5 text-center">
+              <input type="checkbox" ${dish.is86 ? 'checked' : ''} onchange="markUnsaved()" data-menu-field="is86" data-menu-idx="${index}" class="w-4 h-4 rounded text-primary focus:ring-0 cursor-pointer" />
+            </td>
+            <td class="py-2.5 text-right">
+              <button onclick="deleteMenuItem(${index})" class="p-1 rounded text-outline hover:text-rose-400 hover:bg-rose-500/10 transition" title="Delete Dish">
+                <span class="material-symbols-outlined text-base">delete</span>
+              </button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
+
+      function handleAddMenuDish(e) {
+        e.preventDefault();
+        const dish = {
+          name: document.getElementById('newMenuName').value,
+          course: document.getElementById('newMenuCourse').value,
+          station: document.getElementById('newMenuStation').value,
+          price: parseFloat(document.getElementById('newMenuPrice').value) || 500,
+          cost: parseFloat(document.getElementById('newMenuCost').value) || 20,
+          desc: 'Signature royal recipe prepared fresh daily.',
+          rating: 4.9,
+          reviews: 1,
+          is86: false,
+          allergens: ['Chef Specialty']
+        };
+        DB.addDish(dish);
+        document.getElementById('addMenuForm').reset();
+        renderMenuTab();
+        markSaved();
+        showToast(`Published dish: ${dish.name} (₹${dish.price})`, 'success');
+      }
+
+      function deleteMenuItem(index) {
+        const menu = DB.getMenu();
+        const deleted = menu.splice(index, 1);
+        DB.saveMenu(menu);
+        renderMenuTab();
+        markSaved();
+        showToast(`Removed dish: ${deleted[0]?.name}`, 'info');
+      }
+
+      function saveMenuTab() {
+        const menu = DB.getMenu();
+        document.querySelectorAll('[data-menu-field]').forEach(input => {
+          const idx = parseInt(input.getAttribute('data-menu-idx'));
+          const field = input.getAttribute('data-menu-field');
+          if (menu[idx]) {
+            if (field === 'is86') {
+              menu[idx][field] = input.checked;
+            } else if (field === 'price' || field === 'cost') {
+              menu[idx][field] = parseFloat(input.value) || 0;
+            } else {
+              menu[idx][field] = input.value;
+            }
+          }
+        });
+        DB.saveMenu(menu);
+        markSaved();
+        showToast('All menu prices & recipes saved!', 'success');
+      }
+
+      // ==================== GLOBAL CONTROLS ====================
+      function loadActiveTabData() {
+        if (currentTab === 'inventory') renderInventoryTab();
+        else if (currentTab === 'sales') renderSalesTab();
+        else if (currentTab === 'analytics') renderAnalyticsTab();
+        else if (currentTab === 'menu') renderMenuTab();
+      }
+
+      function saveAllMasterData() {
+        saveInventoryTab();
+        saveSalesTab();
+        saveAnalyticsTab();
+        saveMenuTab();
+        markSaved();
+        showToast('🌟 ALL PANELS COMMITTED TO LOCAL STORAGE! Changes now live across website.', 'success');
+      }
+
+      function resetAllDefaults() {
+        if (confirm('Reset all Inventory, Sales, Analytics & Menu to authentic Indian defaults? Any unsaved edits will be cleared.')) {
+          DB.resetAll();
+          loadActiveTabData();
+          markSaved();
+          showToast('Reset all panels to default Indian fine-dining configuration.', 'info');
+        }
+      }
+
+      // Toast Notification
+      function showToast(message, type = 'success') {
+        const container = document.getElementById('toastContainer');
+        const toast = document.createElement('div');
+        const colorClass = type === 'success' ? 'border-emerald-500/40 text-emerald-300' :
+                           type === 'warning' ? 'border-amber-500/40 text-amber-300' : 'border-sky-500/40 text-sky-300';
+        
+        toast.className = `p-3 rounded-xl bg-surface-container-high/95 backdrop-blur-md border ${colorClass} shadow-xl text-xs font-semibold flex items-center gap-2 pointer-events-auto transform transition-all duration-300 translate-y-3 opacity-0`;
+        toast.innerHTML = `
+          <span class="material-symbols-outlined text-base">${type === 'success' ? 'check_circle' : 'info'}</span>
+          <span>${message}</span>
+        `;
+        container.appendChild(toast);
+
+        setTimeout(() => toast.classList.remove('translate-y-3', 'opacity-0'), 10);
+        setTimeout(() => {
+          toast.classList.add('translate-y-3', 'opacity-0');
+          setTimeout(() => toast.remove(), 300);
+        }, 3200);
+      }
+
+      // Initialize
+      loadActiveTabData();
+    </script>
+  </body>
+</html>

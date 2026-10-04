@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SavoryPulse | Luxury Indian Dining & Restaurant Operations OS</title>
+    <meta name="description" content="Michelin-grade Indian culinary operations, kitchen dispatch, Petpooja/Zomato/Swiggy sync, stock forecasting, and executive analytics platform." />
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              background: '#0b1326',
+              surface: '#0b1326',
+              'surface-dim': '#0b1326',
+              'surface-bright': '#31394d',
+              'surface-container-lowest': '#060e20',
+              'surface-container-low': '#131b2e',
+              'surface-container': '#171f33',
+              'surface-container-high': '#222a3d',
+              'surface-container-highest': '#2d3449',
+              'on-surface': '#dae2fd',
+              'on-surface-variant': '#d8c3ad',
+              outline: '#a08e7a',
+              'outline-variant': '#534434',
+              primary: '#ffc174',
+              'primary-container': '#f59e0b',
+              'on-primary': '#472a00',
+              'on-primary-container': '#613b00',
+              secondary: '#4edea3',
+              'secondary-container': '#00a572',
+              'on-secondary': '#003824',
+              tertiary: '#8ed5ff',
+              'tertiary-container': '#38bdf8',
+              error: '#ffb4ab',
+              'error-container': '#93000a'
+            },
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+              display: ['Plus Jakarta Sans', 'sans-serif'],
+              mono: ['JetBrains Mono', 'monospace']
+            },
+            boxShadow: {
+              glow: '0 0 24px rgba(245, 158, 11, 0.35)',
+              emeraldGlow: '0 0 24px rgba(16, 185, 129, 0.3)',
+              card: '0 12px 32px -4px rgba(2, 6, 23, 0.6)'
+            }
+          }
+        }
+      };
+    </script>
+    <style>
+      :root {
+        --bg: #0b1326;
+        --surface: #121d32;
+        --border: rgba(255, 255, 255, 0.08);
+      }
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        margin: 0;
+        background: radial-gradient(circle at 50% 0%, rgba(245, 158, 11, 0.12), transparent 35%), linear-gradient(180deg, #060e20 0%, #0b1326 100%);
+        color: #dae2fd;
+        font-family: 'Inter', sans-serif;
+      }
+      .font-display { font-family: 'Plus Jakarta Sans', sans-serif; }
+      .glass-panel {
+        background: rgba(23, 31, 51, 0.75);
+        backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      .glass-card {
+        background: linear-gradient(180deg, rgba(29, 45, 69, 0.65) 0%, rgba(19, 27, 46, 0.85) 100%);
+        border: 1px solid rgba(255, 255, 255, 0.07);
+        backdrop-filter: blur(12px);
+        transition: all 0.25s ease;
+      }
+      .glass-card:hover {
+        border-color: rgba(255, 193, 116, 0.3);
+        transform: translateY(-3px);
+        box-shadow: 0 16px 36px -8px rgba(0, 0, 0, 0.5);
+      }
+      .subtle-grid {
+        background-image: linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                          linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+        background-size: 32px 32px;
+      }
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      ::-webkit-scrollbar { width: 6px; height: 6px; }
+      ::-webkit-scrollbar-track { background: #060e20; }
+      ::-webkit-scrollbar-thumb { background: #222a3d; border-radius: 4px; }
+      ::-webkit-scrollbar-thumb:hover { background: #ffc174; }
+    </style>
+  </head>
+  <body class="min-h-screen antialiased subtle-grid selection:bg-primary-container selection:text-on-primary-container">
+    
+    <!-- LIVE TELEMETRY TICKER (INDIAN VERSION) -->
+    <div class="bg-surface-container-lowest/90 border-b border-white/5 py-1.5 px-4 text-xs font-mono flex items-center justify-between text-outline z-50 relative">
+      <div class="flex items-center gap-4 overflow-x-auto whitespace-nowrap py-0.5">
+        <span class="flex items-center gap-1.5 text-secondary font-semibold">
+          <span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+          POS LIVE: PETPOOJA, ZOMATO &amp; SWIGGY CONNECTED
+        </span>
+        <span class="text-white/20">|</span>
+        <span class="text-on-surface-variant">LOCATION: <strong class="text-primary font-bold">Cyber Hub Flagship, Gurugram</strong></span>
+        <span class="text-white/20">|</span>
+        <span>SERVICE: <span class="text-emerald-400 font-semibold">DINNER RUSH</span> (42 Tables Occupied)</span>
+        <span class="text-white/20">|</span>
+        <span>KDS ACTIVE: <span class="text-tertiary font-semibold">TANDOOR &amp; CURRY EXPO 1 &amp; 2</span></span>
+      </div>
+      <div class="hidden md:flex items-center gap-3 shrink-0">
+        <span class="flex items-center gap-1 text-primary">
+          <span class="material-symbols-outlined text-sm">schedule</span>
+          <span id="liveClock">19:42:15 IST</span>
+        </span>
+      </div>
+    </div>
+
+    <!-- MAIN WRAPPER -->
+    <div class="mx-auto max-w-[1540px] px-4 py-4 sm:px-6 lg:px-8">
+      
+      <!-- GLOBAL NAVIGATION -->
+      <header class="glass-panel sticky top-3 z-40 rounded-2xl px-4 py-3 sm:px-6 shadow-card transition-all">
+        <div class="flex items-center justify-between gap-4">
+          
+          <!-- Logo & Brand -->
+          <a href="index.html" class="flex items-center gap-3.5 group">
+            <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-amber-300 via-primary-container to-amber-600 text-slate-950 shadow-glow transition group-hover:scale-105">
+              <span class="material-symbols-outlined text-2xl font-bold">restaurant</span>
+            </div>
+            <div>
+              <div class="font-display text-xl font-extrabold tracking-tight text-white flex items-center gap-1.5">
+                SavoryPulse
+                <span class="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20">INDIA OS</span>
+              </div>
+              <div class="text-[10px] uppercase tracking-[0.2em] text-outline font-semibold">Haute Indian Culinary &amp; Analytics</div>
+            </div>
+          </a>
+
+          <!-- Main Nav Links -->
+          <nav class="hidden lg:flex items-center gap-1 text-sm font-medium">
+            <a href="index.html" class="px-3.5 py-2 rounded-xl text-primary bg-primary/10 font-semibold border border-primary/20 flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-lg">dashboard</span>
+              Overview
+            </a>
+            <a href="dispatch.html" class="px-3.5 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-surface-container transition flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-lg text-secondary">table_restaurant</span>
+              Live Dispatch
+              <span class="px-1.5 py-0.2 rounded-full bg-emerald-500/20 text-emerald-300 text-[11px] font-bold">28</span>
+            </a>
+            <a href="analytics.html" class="px-3.5 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-surface-container transition flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-lg text-tertiary">analytics</span>
+              Analytics &amp; P&amp;L
+            </a>
+            <a href="inventory.html" class="px-3.5 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-surface-container transition flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-lg text-amber-400">inventory_2</span>
+              Inventory
+              <span class="px-1.5 py-0.2 rounded-full bg-amber-500/20 text-amber-300 text-[11px] font-bold">12 Low</span>
+            </a>
+            <a href="menu.html" class="px-3.5 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-surface-container transition flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-lg text-pink-400">restaurant_menu</span>
+              Digital Menu
+            </a>
+            <a href="sales.html" class="px-3.5 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-surface-container transition flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-lg text-sky-400">payments</span>
+              Sales (₹)
+            </a>
+            <a href="admin.html" class="px-3.5 py-2 rounded-xl text-amber-300 hover:text-white bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 transition flex items-center gap-1.5 font-semibold">
+              <span class="material-symbols-outlined text-lg text-primary">tune</span>
+              Data Control Panel
+            </a>
+          </nav>
+
+          <!-- Quick Actions & User -->
+          <div class="flex items-center gap-3">
+            <button onclick="toggleCmdSearch()" class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-surface-container border border-white/5 hover:border-primary/40 text-outline hover:text-white transition text-xs">
+              <span class="material-symbols-outlined text-base">search</span>
+              <span>Search Command...</span>
+              <kbd class="px-1.5 py-0.5 rounded bg-surface-container-high text-[10px] font-mono text-outline">⌘K</kbd>
+            </button>
+
+            <a href="dispatch.html" class="hidden md:inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-400 via-primary-container to-amber-600 px-4 py-2 text-xs font-bold text-slate-950 shadow-glow transition hover:brightness-110">
+              <span class="material-symbols-outlined text-base">splitscreen</span>
+              Open Kitchen KDS
+            </a>
+
+            <!-- Chef profile -->
+            <div class="flex items-center gap-2.5 pl-2 border-l border-white/10">
+              <img src="assets/chef.png" onerror="this.src='resturant/assets/chef.png'" alt="Chef Vikram" class="w-9 h-9 rounded-full object-cover ring-2 ring-primary/40" />
+              <div class="hidden xl:block text-left">
+                <div class="text-xs font-bold text-white leading-tight">Chef Vikram Malhotra</div>
+                <div class="text-[10px] text-outline leading-tight">Executive Culinary Director</div>
+              </div>
+            </div>
+
+            <!-- Mobile menu trigger -->
+            <button onclick="toggleMobileNav()" class="lg:hidden p-2 rounded-xl bg-surface-container text-slate-300 hover:text-white">
+              <span class="material-symbols-outlined text-2xl">menu</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Mobile Nav Menu Dropdown -->
+        <div id="mobileNavMenu" class="hidden pt-4 pb-2 border-t border-white/5 mt-3 flex-col gap-2 text-sm lg:hidden">
+          <a href="index.html" class="px-3 py-2 rounded-lg bg-primary/10 text-primary font-semibold flex items-center gap-2">
+            <span class="material-symbols-outlined">dashboard</span> Overview
+          </a>
+          <a href="dispatch.html" class="px-3 py-2 rounded-lg hover:bg-surface-container text-slate-300 hover:text-white flex items-center gap-2">
+            <span class="material-symbols-outlined text-secondary">table_restaurant</span> Live Dispatch Board (KDS)
+          </a>
+          <a href="analytics.html" class="px-3 py-2 rounded-lg hover:bg-surface-container text-slate-300 hover:text-white flex items-center gap-2">
+            <span class="material-symbols-outlined text-tertiary">analytics</span> Analytics &amp; Performance (₹)
+          </a>
+          <a href="inventory.html" class="px-3 py-2 rounded-lg hover:bg-surface-container text-slate-300 hover:text-white flex items-center gap-2">
+            <span class="material-symbols-outlined text-amber-400">inventory_2</span> Inventory &amp; Stock Intelligence
+          </a>
+          <a href="menu.html" class="px-3 py-2 rounded-lg hover:bg-surface-container text-slate-300 hover:text-white flex items-center gap-2">
+            <span class="material-symbols-outlined text-pink-400">restaurant_menu</span> Digital Menu Studio
+          </a>
+          <a href="sales.html" class="px-3 py-2 rounded-lg hover:bg-surface-container text-slate-300 hover:text-white flex items-center gap-2">
+            <span class="material-symbols-outlined text-sky-400">payments</span> Sales &amp; Revenue Reports (₹)
+          </a>
+        </div>
+      </header>
+
+      <!-- HERO SECTION: EXECUTIVE HUB -->
+      <section class="mt-6 grid gap-6 lg:grid-cols-[1.18fr_0.82fr]">
+        
+        <!-- Left: Hero Headline & Fast Actions -->
+        <div class="glass-card rounded-[28px] p-6 sm:p-9 relative overflow-hidden flex flex-col justify-between">
+          <div class="absolute -right-16 -top-16 w-80 h-80 bg-primary/10 rounded-full blur-3xl pointer-events-none"></div>
+
+          <div>
+            <div class="flex flex-wrap items-center gap-2.5">
+              <span class="inline-flex items-center gap-1.5 rounded-full border border-amber-400/30 bg-amber-500/10 px-3 py-1 text-xs font-semibold text-amber-200">
+                <span class="material-symbols-outlined text-sm text-primary">auto_awesome</span>
+                Executive Indian Dining Operations
+              </span>
+              <span class="inline-flex items-center gap-1.5 rounded-full border border-emerald-400/20 bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-300">
+                <span class="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse"></span>
+                +18.4% Week-over-Week Pacing
+              </span>
+            </div>
+
+            <h1 class="font-display mt-5 text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-[1.08] tracking-[-0.04em] text-white">
+              Turn every shift into a <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-primary to-orange-400">high-margin service win</span>.
+            </h1>
+
+            <p class="mt-4 max-w-xl text-base sm:text-lg leading-relaxed text-slate-300 font-normal">
+              Unified operating rhythm for Michelin-caliber Indian dining and high-velocity restaurants. Integrated with Petpooja POS, Zomato, Swiggy, tandoor/curry display stations, and real-time Rupee gross margin analytics.
+            </p>
+
+            <div class="mt-7 flex flex-wrap items-center gap-3.5">
+              <a href="dispatch.html" class="rounded-xl bg-gradient-to-r from-amber-300 via-primary-container to-amber-600 px-6 py-3.5 text-sm font-extrabold text-slate-950 shadow-glow transition hover:brightness-110 flex items-center gap-2">
+                <span class="material-symbols-outlined text-lg">restaurant</span>
+                Launch Live Kitchen KDS
+              </a>
+              <a href="analytics.html" class="rounded-xl border border-slate-700 bg-surface-container/60 hover:bg-surface-container px-6 py-3.5 text-sm font-bold text-white transition flex items-center gap-2">
+                <span class="material-symbols-outlined text-lg text-tertiary">analytics</span>
+                View Analytics (₹ P&amp;L)
+              </a>
+              <button onclick="triggerShiftDemo()" class="rounded-xl border border-white/10 hover:border-white/20 bg-surface-container-high/40 px-4 py-3.5 text-sm font-semibold text-slate-300 hover:text-white transition flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-lg text-secondary">play_circle</span>
+                Simulate Dinner Rush
+              </button>
+            </div>
+          </div>
+
+          <!-- Hero Metrics Strip (INDIAN RUPEES) -->
+          <div class="mt-8 pt-6 border-t border-white/5 grid gap-4 grid-cols-2 sm:grid-cols-4">
+            <div class="p-3.5 rounded-xl bg-surface-container-low/70 border border-white/5">
+              <div class="text-[11px] uppercase tracking-wider text-outline font-semibold">Gross Margin</div>
+              <div class="mt-1.5 flex items-baseline gap-2">
+                <span class="font-display text-2xl sm:text-3xl font-extrabold text-white">36.4%</span>
+                <span class="text-xs font-bold text-secondary flex items-center">+2.8%</span>
+              </div>
+              <div class="text-[11px] text-slate-400 mt-0.5">Realized margin</div>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-surface-container-low/70 border border-white/5">
+              <div class="text-[11px] uppercase tracking-wider text-outline font-semibold">Avg Ticket Time</div>
+              <div class="mt-1.5 flex items-baseline gap-2">
+                <span class="font-display text-2xl sm:text-3xl font-extrabold text-white">12.8m</span>
+                <span class="text-xs font-bold text-secondary flex items-center">-1.4m</span>
+              </div>
+              <div class="text-[11px] text-slate-400 mt-0.5">Tandoor &amp; Curry pace</div>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-surface-container-low/70 border border-white/5">
+              <div class="text-[11px] uppercase tracking-wider text-outline font-semibold">On-Time Firing</div>
+              <div class="mt-1.5 flex items-baseline gap-2">
+                <span class="font-display text-2xl sm:text-3xl font-extrabold text-emerald-400">96.8%</span>
+                <span class="text-xs font-bold text-emerald-300">Peak</span>
+              </div>
+              <div class="text-[11px] text-slate-400 mt-0.5">&lt;15m SLA target</div>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-surface-container-low/70 border border-white/5">
+              <div class="text-[11px] uppercase tracking-wider text-outline font-semibold">Shift Revenue</div>
+              <div class="mt-1.5 flex items-baseline gap-1.5">
+                <span class="font-display text-2xl sm:text-3xl font-extrabold text-amber-300 font-mono">₹1.85L</span>
+                <span class="text-xs font-bold text-secondary">+19%</span>
+              </div>
+              <div class="text-[11px] text-slate-400 mt-0.5">Dinner target: ₹2.25L</div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right: Real-time Live Operations Snapshot -->
+        <div class="space-y-4 flex flex-col justify-between">
+          
+          <!-- Live Service Pulse Widget -->
+          <div class="glass-card rounded-[28px] p-6 flex-1 flex flex-col justify-between">
+            <div class="flex items-center justify-between">
+              <div>
+                <span class="text-[11px] font-bold uppercase tracking-[0.2em] text-primary">Live Service Pulse</span>
+                <h3 class="font-display text-xl font-bold text-white mt-0.5">Main Hall &amp; Terrace Lounge</h3>
+              </div>
+              <span class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary-container/20 text-secondary text-xs font-bold">
+                <span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+                Dining Active
+              </span>
+            </div>
+
+            <!-- Floor Stats Bar -->
+            <div class="mt-4 grid grid-cols-3 gap-3">
+              <div class="p-3 rounded-xl bg-surface-container-high/60 border border-white/5 text-center">
+                <div class="text-[10px] uppercase text-outline font-semibold">Seated Tables</div>
+                <div class="font-display text-2xl font-black text-white mt-1">42 / 48</div>
+                <div class="text-[11px] text-amber-300 font-semibold mt-0.5">87% Capacity</div>
+              </div>
+              <div class="p-3 rounded-xl bg-surface-container-high/60 border border-white/5 text-center">
+                <div class="text-[10px] uppercase text-outline font-semibold">Active Covers</div>
+                <div class="font-display text-2xl font-black text-white mt-1">146</div>
+                <div class="text-[11px] text-slate-300 mt-0.5">3.5 guests / tbl</div>
+              </div>
+              <div class="p-3 rounded-xl bg-surface-container-high/60 border border-white/5 text-center">
+                <div class="text-[10px] uppercase text-outline font-semibold">Avg Check (₹)</div>
+                <div class="font-display text-2xl font-black text-secondary font-mono mt-1">₹3,450</div>
+                <div class="text-[11px] text-slate-300 mt-0.5">Premium Dining</div>
+              </div>
+            </div>
+
+            <!-- AI Surge Recommendation Alert -->
+            <div class="mt-4 p-4 rounded-2xl bg-surface-container-high/80 border border-primary/20 flex items-start gap-3">
+              <div class="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center shrink-0 text-primary">
+                <span class="material-symbols-outlined text-2xl">bolt</span>
+              </div>
+              <div class="flex-1">
+                <div class="flex items-center justify-between text-xs">
+                  <span class="font-bold text-primary uppercase tracking-wider">AI Kitchen Advisory</span>
+                  <span class="text-outline">Priority 1 · High Velocity</span>
+                </div>
+                <p class="text-sm text-slate-200 mt-1 leading-snug">
+                  <strong class="text-white">Awadhi Dum Biryani &amp; Truffle Dal Makhani</strong> are pacing at <span class="text-secondary font-bold">2.4x expected velocity</span>. Fire 25 additional dum handis before the 20:30 rush wave.
+                </p>
+              </div>
+            </div>
+
+            <!-- Active Orders Mini Strip -->
+            <div class="mt-4 pt-4 border-t border-white/5 flex items-center justify-between text-xs">
+              <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-primary-container"></span>
+                <span class="text-slate-300">Live KDS Queue: <strong class="text-white">12 Prep · 7 Tandoor Firing · 5 Ready</strong></span>
+              </div>
+              <a href="dispatch.html" class="text-primary hover:underline font-semibold flex items-center gap-1">
+                Manage Tickets <span class="material-symbols-outlined text-sm">arrow_forward</span>
+              </a>
+            </div>
+
+          </div>
+
+          <!-- Quick Action Bar -->
+          <div class="grid grid-cols-2 gap-3">
+            <a href="inventory.html" class="glass-card rounded-2xl p-4 flex items-center gap-3.5 hover:border-amber-400/40">
+              <div class="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-300 flex items-center justify-center shrink-0">
+                <span class="material-symbols-outlined text-xl">inventory_2</span>
+              </div>
+              <div>
+                <div class="text-xs uppercase tracking-wider text-outline font-semibold">Inventory</div>
+                <div class="text-sm font-bold text-white">12 Low Stock Items</div>
+              </div>
+            </a>
+
+            <a href="menu.html" class="glass-card rounded-2xl p-4 flex items-center gap-3.5 hover:border-pink-400/40">
+              <div class="w-10 h-10 rounded-xl bg-pink-500/10 text-pink-300 flex items-center justify-center shrink-0">
+                <span class="material-symbols-outlined text-xl">restaurant_menu</span>
+              </div>
+              <div>
+                <div class="text-xs uppercase tracking-wider text-outline font-semibold">Menu Studio</div>
+                <div class="text-sm font-bold text-white">48 Indian Dishes</div>
+              </div>
+            </a>
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- OPERATIONAL MODULES DIRECTORY: 4 FULL DASHBOARDS -->
+      <section class="mt-10">
+        <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
+          <div>
+            <div class="text-xs uppercase tracking-[0.2em] text-primary font-bold">Comprehensive Operating Suite</div>
+            <h2 class="font-display text-3xl font-extrabold text-white mt-1">Four Core Culinary Operations Engines</h2>
+          </div>
+          <div class="text-sm text-slate-400 max-w-md">
+            Click any engine below to launch into the full interactive management interface.
+          </div>
+        </div>
+
+        <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+          
+          <!-- Module 1: Live Kitchen Dispatch -->
+          <div class="glass-card rounded-[24px] p-6 flex flex-col justify-between group">
+            <div>
+              <div class="flex items-center justify-between mb-4">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 text-slate-950 flex items-center justify-center shadow-glow">
+                  <span class="material-symbols-outlined text-2xl font-bold">splitscreen</span>
+                </div>
+                <span class="px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-xs font-bold flex items-center gap-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse"></span>
+                  28 Active
+                </span>
+              </div>
+              <h3 class="font-display text-xl font-bold text-white group-hover:text-primary transition">Kitchen Dispatch (KDS)</h3>
+              <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+                Dual-screen continuous ticket expeditor. Multi-channel color-coded tickets (Dine-in POS, Zomato, Swiggy, Direct Web), live delay alerts, and bump bar.
+              </p>
+              
+              <div class="mt-4 flex flex-wrap gap-1.5 text-[11px] text-slate-300">
+                <span class="px-2 py-0.5 rounded-md bg-surface-container-high">Station Chimes</span>
+                <span class="px-2 py-0.5 rounded-md bg-surface-container-high">&gt;20m Delay Alerts</span>
+                <span class="px-2 py-0.5 rounded-md bg-surface-container-high">Zomato/Swiggy Feed</span>
+              </div>
+            </div>
+
+            <div class="mt-6 pt-4 border-t border-white/5 flex items-center justify-between">
+              <a href="dispatch.html" class="w-full py-2.5 rounded-xl bg-surface-container hover:bg-primary hover:text-slate-950 font-bold text-xs text-center transition flex items-center justify-center gap-2">
+                <span>Launch Dispatch Board</span>
+                <span class="material-symbols-outlined text-sm">arrow_forward</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Module 2: Analytics & Performance -->
+          <div class="glass-card rounded-[24px] p-6 flex flex-col justify-between group">
+            <div>
+              <div class="flex items-center justify-between mb-4">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-sky-400 to-blue-600 text-slate-950 flex items-center justify-center shadow-[0_0_20px_rgba(56,189,248,0.35)]">
+                  <span class="material-symbols-outlined text-2xl font-bold">analytics</span>
+                </div>
+                <span class="px-2.5 py-1 rounded-full bg-sky-500/10 border border-sky-500/20 text-sky-300 text-xs font-bold">
+                  Shift ₹ P&amp;L
+                </span>
+              </div>
+              <h3 class="font-display text-xl font-bold text-white group-hover:text-tertiary transition">Analytics &amp; P&amp;L (₹)</h3>
+              <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+                Real-time C-suite executive dashboard. Hourly velocity, table turnover distribution, Petpooja GST reports, and gross margin audits in Rupees.
+              </p>
+
+              <div class="mt-4 flex flex-wrap gap-1.5 text-[11px] text-slate-300">
+                <span class="px-2 py-0.5 rounded-md bg-surface-container-high">Hourly Covers</span>
+                <span class="px-2 py-0.5 rounded-md bg-surface-container-high">GST 5% Z-Report</span>
+                <span class="px-2 py-0.5 rounded-md bg-surface-container-high">Channel Margin Mix</span>
+              </div>
+            </div>
+
+            <div class="mt-6 pt-4 border-t border-white/5 flex items-center justify-between">
+              <a href="analytics.html" class="w-full py-2.5 rounded-xl bg-surface-container hover:bg-tertiary hover:text-slate-950 font-bold text-xs text-center transition flex items-center justify-center gap-2">
+                <span>Launch Analytics Suite</span>
+                <span class="material-symbols-outlined text-sm">arrow_forward</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Module 3: Inventory & Stock Forecasting -->
+          <div class="glass-card rounded-[24px] p-6 flex flex-col justify-between group">
+            <div>
+              <div class="flex items-center justify-between mb-4">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-400 to-green-600 text-slate-950 flex items-center justify-center shadow-emeraldGlow">
+                  <span class="material-symbols-outlined text-2xl font-bold">inventory_2</span>
+                </div>
+                <span class="px-2.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-300 text-xs font-bold">
+                  184 SKUs
+                </span>
+              </div>
+              <h3 class="font-display text-xl font-bold text-white group-hover:text-secondary transition">Inventory &amp; Stock</h3>
+              <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+                Cold storage, dairy, spice vault &amp; meat stock intelligence. Par level compliance, 86'd automatic dish lockouts, and supplier PO generation.
+              </p>
+
+              <div class="mt-4 flex flex-wrap gap-1.5 text-[11px] text-slate-300">
+                <span class="px-2 py-0.5 rounded-md bg-surface-container-high">Par Gauges</span>
+                <span class="px-2 py-0.5 rounded-md bg-surface-container-high">Create PO</span>
+                <span class="px-2 py-0.5 rounded-md bg-surface-container-high">Spoilage Tracker</span>
+              </div>
+            </div>
+
+            <div class="mt-6 pt-4 border-t border-white/5 flex items-center justify-between">
+              <a href="inventory.html" class="w-full py-2.5 rounded-xl bg-surface-container hover:bg-secondary hover:text-slate-950 font-bold text-xs text-center transition flex items-center justify-center gap-2">
+                <span>Launch Stock System</span>
+                <span class="material-symbols-outlined text-sm">arrow_forward</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Module 4: Digital Menu & Food Ratings Studio -->
+          <div class="glass-card rounded-[24px] p-6 flex flex-col justify-between group">
+            <div>
+              <div class="flex items-center justify-between mb-4">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-pink-400 to-rose-600 text-slate-950 flex items-center justify-center shadow-[0_0_20px_rgba(244,114,182,0.35)]">
+                  <span class="material-symbols-outlined text-2xl font-bold">restaurant_menu</span>
+                </div>
+                <span class="px-2.5 py-1 rounded-full bg-pink-500/10 border border-pink-500/20 text-pink-300 text-xs font-bold">
+                  4.88 ★ Avg
+                </span>
+              </div>
+              <h3 class="font-display text-xl font-bold text-white group-hover:text-pink-300 transition">Digital Menu Studio</h3>
+              <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+                Live catalog management. Instant 86/stock-out broadcast across Petpooja, Zomato and Swiggy, Indian spice customization, and contactless UPI QR menus.
+              </p>
+
+              <div class="mt-4 flex flex-wrap gap-1.5 text-[11px] text-slate-300">
+                <span class="px-2 py-0.5 rounded-md bg-surface-container-high">Live 86 Switch</span>
+                <span class="px-2 py-0.5 rounded-md bg-surface-container-high">UPI QR Preview</span>
+                <span class="px-2 py-0.5 rounded-md bg-surface-container-high">Guest Sentiment</span>
+              </div>
+            </div>
+
+            <div class="mt-6 pt-4 border-t border-white/5 flex items-center justify-between">
+              <a href="menu.html" class="w-full py-2.5 rounded-xl bg-surface-container hover:bg-pink-400 hover:text-slate-950 font-bold text-xs text-center transition flex items-center justify-center gap-2">
+                <span>Launch Menu Studio</span>
+                <span class="material-symbols-outlined text-sm">arrow_forward</span>
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- DETAILED OPERATIONAL TELEMETRY: TOP PERFORMERS & STAFFING -->
+      <section class="mt-10 grid gap-6 lg:grid-cols-12">
+        
+        <!-- Left: Dish Velocity & Sales Leaderboard (8 cols) -->
+        <div class="lg:col-span-8 glass-card rounded-[28px] p-6 sm:p-7">
+          <div class="flex items-center justify-between mb-6">
+            <div>
+              <div class="text-xs uppercase tracking-wider text-outline font-semibold">Service Performance</div>
+              <h3 class="font-display text-2xl font-extrabold text-white mt-1">High Velocity Indian Signatures · Today's Service</h3>
+            </div>
+            <a href="sales.html" class="px-3 py-1.5 rounded-lg bg-surface-container text-xs font-bold text-primary hover:bg-surface-container-high transition flex items-center gap-1">
+              <span>View Full ₹ P&amp;L</span>
+              <span class="material-symbols-outlined text-sm">arrow_forward</span>
+            </a>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm">
+              <thead>
+                <tr class="border-b border-white/5 text-[11px] uppercase tracking-wider text-outline">
+                  <th class="pb-3 font-semibold">Signature Dish &amp; Station</th>
+                  <th class="pb-3 font-semibold text-center">Velocity</th>
+                  <th class="pb-3 font-semibold text-right">Unit Price</th>
+                  <th class="pb-3 font-semibold text-right">Gross Rev (₹)</th>
+                  <th class="pb-3 font-semibold text-right">Margin %</th>
+                  <th class="pb-3 font-semibold text-right">Status</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-white/5 font-mono text-xs">
+                
+                <tr class="hover:bg-surface-container/40 transition">
+                  <td class="py-3 font-sans">
+                    <div class="font-bold text-white flex items-center gap-2">
+                      <span class="w-2 h-2 rounded-full bg-secondary"></span>
+                      Slow-Cooked Truffle Dal Makhani
+                    </div>
+                    <div class="text-[11px] text-outline font-sans">Station 2 · Curry &amp; Gravy Line</div>
+                  </td>
+                  <td class="py-3 text-center font-bold text-white">128 orders</td>
+                  <td class="py-3 text-right text-slate-300 font-sans">₹580</td>
+                  <td class="py-3 text-right font-bold text-emerald-400 font-sans">₹74,240</td>
+                  <td class="py-3 text-right font-bold text-secondary">82.4%</td>
+                  <td class="py-3 text-right">
+                    <span class="px-2 py-0.5 rounded-full bg-secondary-container/20 text-secondary text-[10px] font-bold">Fast Pacing</span>
+                  </td>
+                </tr>
+
+                <tr class="hover:bg-surface-container/40 transition">
+                  <td class="py-3 font-sans">
+                    <div class="font-bold text-white flex items-center gap-2">
+                      <span class="w-2 h-2 rounded-full bg-primary"></span>
+                      Awadhi Slow-Cooked Dum Gosht Biryani
+                    </div>
+                    <div class="text-[11px] text-outline font-sans">Station 3 · Dum Handi Station</div>
+                  </td>
+                  <td class="py-3 text-center font-bold text-white">84 orders</td>
+                  <td class="py-3 text-right text-slate-300 font-sans">₹750</td>
+                  <td class="py-3 text-right font-bold text-emerald-400 font-sans">₹63,000</td>
+                  <td class="py-3 text-right font-bold text-secondary">68.5%</td>
+                  <td class="py-3 text-right">
+                    <span class="px-2 py-0.5 rounded-full bg-primary-container/20 text-primary text-[10px] font-bold">High Gross</span>
+                  </td>
+                </tr>
+
+                <tr class="hover:bg-surface-container/40 transition">
+                  <td class="py-3 font-sans">
+                    <div class="font-bold text-white flex items-center gap-2">
+                      <span class="w-2 h-2 rounded-full bg-sky-400"></span>
+                      Tandoori Norwegian Salmon Tikka
+                    </div>
+                    <div class="text-[11px] text-outline font-sans">Station 1 · Clay Tandoor Pit</div>
+                  </td>
+                  <td class="py-3 text-center font-bold text-white">62 orders</td>
+                  <td class="py-3 text-right text-slate-300 font-sans">₹890</td>
+                  <td class="py-3 text-right font-bold text-emerald-400 font-sans">₹55,180</td>
+                  <td class="py-3 text-right font-bold text-secondary">64.2%</td>
+                  <td class="py-3 text-right">
+                    <span class="px-2 py-0.5 rounded-full bg-surface-container-high text-slate-300 text-[10px] font-bold">Healthy</span>
+                  </td>
+                </tr>
+
+                <tr class="hover:bg-surface-container/40 transition">
+                  <td class="py-3 font-sans">
+                    <div class="font-bold text-white flex items-center gap-2">
+                      <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+                      Smoked Galouti Kebab with Sheermal
+                    </div>
+                    <div class="text-[11px] text-outline font-sans">Station 1 · Awadhi Sigri</div>
+                  </td>
+                  <td class="py-3 text-center font-bold text-white">96 orders</td>
+                  <td class="py-3 text-right text-slate-300 font-sans">₹620</td>
+                  <td class="py-3 text-right font-bold text-emerald-400 font-sans">₹59,520</td>
+                  <td class="py-3 text-right font-bold text-secondary">79.0%</td>
+                  <td class="py-3 text-right">
+                    <span class="px-2 py-0.5 rounded-full bg-secondary-container/20 text-secondary text-[10px] font-bold">High Margin</span>
+                  </td>
+                </tr>
+
+                <tr class="hover:bg-surface-container/40 transition">
+                  <td class="py-3 font-sans">
+                    <div class="font-bold text-white flex items-center gap-2">
+                      <span class="w-2 h-2 rounded-full bg-pink-400"></span>
+                      Saffron Pistachio Kulfi &amp; 24K Gold Leaf
+                    </div>
+                    <div class="text-[11px] text-outline font-sans">Station 4 · Mithai &amp; Cold Larder</div>
+                  </td>
+                  <td class="py-3 text-center font-bold text-white">74 orders</td>
+                  <td class="py-3 text-right text-slate-300 font-sans">₹380</td>
+                  <td class="py-3 text-right font-bold text-emerald-400 font-sans">₹28,120</td>
+                  <td class="py-3 text-right font-bold text-secondary">86.5%</td>
+                  <td class="py-3 text-right">
+                    <span class="px-2 py-0.5 rounded-full bg-secondary-container/20 text-secondary text-[10px] font-bold">Top Dessert</span>
+                  </td>
+                </tr>
+
+              </tbody>
+            </table>
+          </div>
+
+          <div class="mt-4 pt-4 border-t border-white/5 flex items-center justify-between text-xs text-slate-400">
+            <span>Showing top 5 of 48 dishes · Synced via Petpooja POS API</span>
+            <span class="font-bold text-white">Total Active Session Gross: <span class="text-emerald-400 font-mono">₹2,80,060</span></span>
+          </div>
+
+        </div>
+
+        <!-- Right: Team & Staffing Coverage Snapshot (4 cols) -->
+        <div class="lg:col-span-4 space-y-4">
+          
+          <div class="glass-card rounded-[28px] p-6">
+            <div class="flex items-center justify-between mb-4">
+              <div>
+                <div class="text-[10px] uppercase tracking-wider text-outline font-semibold">Service Coverage</div>
+                <h3 class="font-display text-xl font-bold text-white">Shift Team Execution</h3>
+              </div>
+              <span class="w-8 h-8 rounded-xl bg-surface-container flex items-center justify-center text-primary">
+                <span class="material-symbols-outlined text-lg">groups</span>
+              </span>
+            </div>
+
+            <div class="space-y-3.5">
+              
+              <div class="p-3.5 rounded-xl bg-surface-container-high/60 border border-white/5">
+                <div class="flex items-center justify-between text-xs">
+                  <span class="font-bold text-white">Front of House (Captain &amp; Stewards)</span>
+                  <span class="font-mono text-emerald-400 font-bold">18 on floor</span>
+                </div>
+                <div class="text-[11px] text-slate-300 mt-1">1 Maître d', 2 Captains, 10 Stewards, 5 Runners</div>
+                <div class="w-full bg-surface-container-highest h-1.5 rounded-full mt-2.5 overflow-hidden">
+                  <div class="bg-secondary h-full rounded-full" style="width: 100%"></div>
+                </div>
+              </div>
+
+              <div class="p-3.5 rounded-xl bg-surface-container-high/60 border border-white/5">
+                <div class="flex items-center justify-between text-xs">
+                  <span class="font-bold text-white">Back of House (Bawarchis &amp; Ustads)</span>
+                  <span class="font-mono text-amber-300 font-bold">22 cooks</span>
+                </div>
+                <div class="text-[11px] text-slate-300 mt-1">1 Exec Chef, 2 Sous, 4 Tandoor Ustads, 3 Dum standby</div>
+                <div class="w-full bg-surface-container-highest h-1.5 rounded-full mt-2.5 overflow-hidden">
+                  <div class="bg-primary-container h-full rounded-full" style="width: 95%"></div>
+                </div>
+              </div>
+
+              <div class="p-3.5 rounded-xl bg-surface-container-high/60 border border-white/5">
+                <div class="flex items-center justify-between text-xs">
+                  <span class="font-bold text-white">Guest Hospitality Score</span>
+                  <span class="font-mono text-primary font-bold">4.88 / 5.0 ★</span>
+                </div>
+                <div class="text-[11px] text-slate-300 mt-1">Zomato Dining &amp; Google Reviews live feedback</div>
+                <div class="w-full bg-surface-container-highest h-1.5 rounded-full mt-2.5 overflow-hidden">
+                  <div class="bg-gradient-to-r from-amber-400 to-primary h-full rounded-full" style="width: 98%"></div>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="mt-5 pt-4 border-t border-white/5 flex items-center justify-between text-xs">
+              <span class="text-outline">Dinner shift ends at 23:30</span>
+              <button onclick="showToast('Staffing roster synced with POSist', 'info')" class="text-primary hover:underline font-semibold">
+                Sync Roster
+              </button>
+            </div>
+          </div>
+
+          <!-- Quick System Diagnostic -->
+          <div class="glass-card rounded-[28px] p-5">
+            <div class="flex items-center justify-between text-xs">
+              <span class="text-outline font-semibold uppercase tracking-wider">Hardware &amp; UPI Gateways</span>
+              <span class="flex items-center gap-1 text-emerald-400 font-bold">
+                <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> All Systems Normal
+              </span>
+            </div>
+            <div class="mt-3 grid grid-cols-2 gap-2 text-xs">
+              <div class="p-2 rounded-lg bg-surface-container-low border border-white/5 flex items-center gap-2">
+                <span class="material-symbols-outlined text-secondary text-base">print</span>
+                <span class="text-slate-300">KOT Printer 1</span>
+              </div>
+              <div class="p-2 rounded-lg bg-surface-container-low border border-white/5 flex items-center gap-2">
+                <span class="material-symbols-outlined text-secondary text-base">print</span>
+                <span class="text-slate-300">Tandoor KOT 2</span>
+              </div>
+              <div class="p-2 rounded-lg bg-surface-container-low border border-white/5 flex items-center gap-2">
+                <span class="material-symbols-outlined text-secondary text-base">contactless</span>
+                <span class="text-slate-300">Pine Labs EDC (3)</span>
+              </div>
+              <div class="p-2 rounded-lg bg-surface-container-low border border-white/5 flex items-center gap-2">
+                <span class="material-symbols-outlined text-secondary text-base">qr_code</span>
+                <span class="text-slate-300">UPI Dynamic Soundbox</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- GLOBAL FOOTER -->
+      <footer class="glass-panel rounded-2xl px-6 py-8 mt-12 border border-white/5">
+        <div class="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+          <div class="flex items-center gap-3">
+            <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-amber-300 via-primary-container to-amber-600 text-slate-950 font-bold shadow-glow">
+              <span class="material-symbols-outlined text-xl">restaurant</span>
+            </div>
+            <div>
+              <div class="font-display text-base font-extrabold text-white">SavoryPulse Restaurant OS · India Edition</div>
+              <div class="text-[10px] uppercase tracking-[0.2em] text-outline font-semibold">Executive Dark Culinary Modernism</div>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap gap-6 text-xs text-slate-400 font-medium">
+            <a href="index.html" class="hover:text-primary transition">Overview Hub</a>
+            <a href="dispatch.html" class="hover:text-primary transition">Kitchen KDS</a>
+            <a href="analytics.html" class="hover:text-primary transition">Analytics &amp; ₹ P&amp;L</a>
+            <a href="inventory.html" class="hover:text-primary transition">Inventory Intelligence</a>
+            <a href="menu.html" class="hover:text-primary transition">Digital Menu Studio</a>
+            <a href="sales.html" class="hover:text-primary transition">Sales Reports (₹)</a>
+          </div>
+
+          <div class="text-xs text-outline">
+            &copy; 2026 SavoryPulse Hospitality Technologies (India) Pvt Ltd. All rights reserved.
+          </div>
+        </div>
+      </footer>
+
+    </div>
+
+    <!-- COMMAND PALETTE MODAL (CTRL+K / CMD+K) -->
+    <div id="cmdModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-start justify-center pt-20 px-4">
+      <div class="bg-surface-container-low border border-white/10 rounded-2xl w-full max-w-xl shadow-2xl overflow-hidden animate-fadeIn">
+        <div class="p-4 border-b border-white/5 flex items-center gap-3">
+          <span class="material-symbols-outlined text-primary text-xl">search</span>
+          <input id="cmdInput" type="text" placeholder="Jump to ticket, dish, SKU, or report (e.g. 'Dal Makhani', 'Biryani', 'KDS', 'PO')..." class="bg-transparent text-white font-sans text-sm focus:outline-none w-full placeholder:text-outline" oninput="filterCmd(this.value)" />
+          <button onclick="toggleCmdSearch()" class="text-outline hover:text-white px-2 py-1 rounded bg-surface-container text-xs font-mono">ESC</button>
+        </div>
+        <div id="cmdResults" class="p-3 max-h-80 overflow-y-auto space-y-1 text-sm">
+          <a href="dispatch.html" class="flex items-center justify-between p-2.5 rounded-xl hover:bg-surface-container text-slate-200 hover:text-white transition">
+            <div class="flex items-center gap-2.5">
+              <span class="material-symbols-outlined text-secondary text-lg">splitscreen</span>
+              <span>Kitchen Dispatch Expo (Live KDS)</span>
+            </div>
+            <span class="text-[10px] font-mono uppercase text-outline">Screen</span>
+          </a>
+          <a href="analytics.html" class="flex items-center justify-between p-2.5 rounded-xl hover:bg-surface-container text-slate-200 hover:text-white transition">
+            <div class="flex items-center gap-2.5">
+              <span class="material-symbols-outlined text-tertiary text-lg">analytics</span>
+              <span>Analytics &amp; Performance ₹ P&amp;L</span>
+            </div>
+            <span class="text-[10px] font-mono uppercase text-outline">Report</span>
+          </a>
+          <a href="inventory.html" class="flex items-center justify-between p-2.5 rounded-xl hover:bg-surface-container text-slate-200 hover:text-white transition">
+            <div class="flex items-center gap-2.5">
+              <span class="material-symbols-outlined text-amber-400 text-lg">inventory_2</span>
+              <span>Inventory &amp; Stock Intelligence</span>
+            </div>
+            <span class="text-[10px] font-mono uppercase text-outline">Stock</span>
+          </a>
+          <a href="menu.html" class="flex items-center justify-between p-2.5 rounded-xl hover:bg-surface-container text-slate-200 hover:text-white transition">
+            <div class="flex items-center gap-2.5">
+              <span class="material-symbols-outlined text-pink-400 text-lg">restaurant_menu</span>
+              <span>Digital Menu &amp; Ratings Studio</span>
+            </div>
+            <span class="text-[10px] font-mono uppercase text-outline">Menu</span>
+          </a>
+          <a href="sales.html" class="flex items-center justify-between p-2.5 rounded-xl hover:bg-surface-container text-slate-200 hover:text-white transition">
+            <div class="flex items-center gap-2.5">
+              <span class="material-symbols-outlined text-sky-400 text-lg">payments</span>
+              <span>Sales Performance Breakdown (₹)</span>
+            </div>
+            <span class="text-[10px] font-mono uppercase text-outline">Finance</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOAST CONTAINER -->
+    <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+      function updateClock() {
+        const now = new Date();
+        const clockEl = document.getElementById('liveClock');
+        if (clockEl) {
+          clockEl.textContent = now.toLocaleTimeString() + ' IST';
+        }
+      }
+      setInterval(updateClock, 1000);
+      updateClock();
+
+      function toggleMobileNav() {
+        const menu = document.getElementById('mobileNavMenu');
+        menu.classList.toggle('hidden');
+        menu.classList.toggle('flex');
+      }
+
+      function toggleCmdSearch() {
+        const modal = document.getElementById('cmdModal');
+        modal.classList.toggle('hidden');
+        modal.classList.toggle('flex');
+        if (!modal.classList.contains('hidden')) {
+          setTimeout(() => document.getElementById('cmdInput').focus(), 50);
+        }
+      }
+
+      window.addEventListener('keydown', (e) => {
+        if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+          e.preventDefault();
+          toggleCmdSearch();
+        }
+        if (e.key === 'Escape') {
+          const modal = document.getElementById('cmdModal');
+          if (!modal.classList.contains('hidden')) modal.classList.add('hidden');
+        }
+      });
+
+      function filterCmd(val) {
+        const query = val.toLowerCase();
+        const items = document.querySelectorAll('#cmdResults a');
+        items.forEach(item => {
+          const text = item.textContent.toLowerCase();
+          item.style.display = text.includes(query) ? 'flex' : 'none';
+        });
+      }
+
+      function showToast(message, type = 'success') {
+        const container = document.getElementById('toastContainer');
+        const toast = document.createElement('div');
+        const colorClass = type === 'success' ? 'border-emerald-500/40 text-emerald-300' :
+                           type === 'warning' ? 'border-amber-500/40 text-amber-300' : 'border-sky-500/40 text-sky-300';
+        
+        toast.className = `p-3.5 rounded-xl bg-surface-container-high/95 backdrop-blur-md border ${colorClass} shadow-xl text-xs font-semibold flex items-center gap-2 pointer-events-auto transform transition-all duration-300 translate-y-3 opacity-0`;
+        toast.innerHTML = `
+          <span class="material-symbols-outlined text-base">${type === 'success' ? 'check_circle' : 'info'}</span>
+          <span>${message}</span>
+        `;
+        container.appendChild(toast);
+
+        setTimeout(() => toast.classList.remove('translate-y-3', 'opacity-0'), 10);
+        setTimeout(() => {
+          toast.classList.add('translate-y-3', 'opacity-0');
+          setTimeout(() => toast.remove(), 300);
+        }, 3200);
+      }
+
+      function triggerShiftDemo() {
+        showToast('Simulating dinner rush wave: 10 new KOT orders from Zomato & Dine-in!', 'warning');
+        setTimeout(() => {
+          showToast('Petpooja KOT auto-routed to Tandoor & Curry stations.', 'success');
+        }, 1800);
+      }
+    </script>
+  </body>
+</html>

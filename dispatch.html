@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kitchen Dispatch (KDS) | SavoryPulse Indian Operations</title>
+    <meta name="description" content="High-velocity Back-of-House Kitchen Display System, multi-channel expeditor, and real-time ticket dispatch for Indian fine dining." />
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              background: '#0b1326',
+              surface: '#0b1326',
+              'surface-dim': '#0b1326',
+              'surface-bright': '#31394d',
+              'surface-container-lowest': '#060e20',
+              'surface-container-low': '#131b2e',
+              'surface-container': '#171f33',
+              'surface-container-high': '#222a3d',
+              'surface-container-highest': '#2d3449',
+              'on-surface': '#dae2fd',
+              'on-surface-variant': '#d8c3ad',
+              outline: '#a08e7a',
+              primary: '#ffc174',
+              'primary-container': '#f59e0b',
+              'on-primary': '#472a00',
+              secondary: '#4edea3',
+              'secondary-container': '#00a572',
+              tertiary: '#8ed5ff',
+              error: '#ffb4ab',
+              'error-container': '#93000a'
+            },
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+              display: ['Plus Jakarta Sans', 'sans-serif'],
+              mono: ['JetBrains Mono', 'monospace']
+            }
+          }
+        }
+      };
+    </script>
+    <style>
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background: #060e20;
+        color: #dae2fd;
+        font-family: 'Inter', sans-serif;
+      }
+      .font-display { font-family: 'Plus Jakarta Sans', sans-serif; }
+      .ticket-card {
+        background: #131b2e;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-top-width: 4px;
+        transition: all 0.2s ease;
+      }
+      .ticket-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px -4px rgba(0, 0, 0, 0.6);
+      }
+      .ticket-green { border-top-color: #10b981; }
+      .ticket-amber { border-top-color: #f59e0b; }
+      .ticket-crimson {
+        border-top-color: #ef4444;
+        box-shadow: 0 0 16px rgba(239, 68, 68, 0.25);
+      }
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      @keyframes pulseGlow {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.5; }
+      }
+      .animate-delay { animation: pulseGlow 1.5s infinite; }
+    </style>
+  </head>
+  <body class="min-h-screen antialiased flex flex-col selection:bg-primary-container selection:text-on-primary">
+    
+    <!-- TOP NAVIGATION & COMMAND STRIP -->
+    <header class="bg-surface-container-lowest border-b border-white/5 px-4 py-2.5 flex items-center justify-between sticky top-0 z-40">
+      
+      <!-- Brand & Page Title -->
+      <div class="flex items-center gap-3.5">
+        <a href="index.html" class="flex items-center gap-2.5 group">
+          <div class="h-9 w-9 rounded-xl bg-gradient-to-br from-amber-300 via-primary-container to-amber-600 text-slate-950 flex items-center justify-center font-bold shadow-[0_0_14px_rgba(245,158,11,0.4)]">
+            <span class="material-symbols-outlined text-xl">restaurant</span>
+          </div>
+          <div>
+            <div class="font-display text-sm font-extrabold text-white tracking-tight leading-none group-hover:text-primary transition">SavoryPulse</div>
+            <div class="text-[9px] uppercase tracking-wider text-outline font-semibold leading-none mt-1">Live KOT Dispatch</div>
+          </div>
+        </a>
+
+        <div class="h-5 w-px bg-white/10 mx-1 hidden sm:block"></div>
+
+        <!-- Navigation Tabs -->
+        <nav class="hidden md:flex items-center gap-1 text-xs">
+          <a href="index.html" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-surface-container transition">Overview</a>
+          <a href="dispatch.html" class="px-3 py-1.5 rounded-lg bg-primary-container text-slate-950 font-extrabold shadow-sm flex items-center gap-1">
+            <span class="material-symbols-outlined text-base">splitscreen</span>
+            <span>Live Dispatch</span>
+          </a>
+          <a href="analytics.html" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-surface-container transition">Analytics (₹)</a>
+          <a href="inventory.html" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-surface-container transition">Inventory</a>
+          <a href="menu.html" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-surface-container transition">Digital Menu</a>
+          <a href="sales.html" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-surface-container transition">Sales (₹)</a>
+          <a href="admin.html" class="px-3 py-1.5 rounded-lg text-amber-300 hover:text-white bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 transition flex items-center gap-1 font-semibold">
+            <span class="material-symbols-outlined text-sm">tune</span>
+            <span>Data Control Panel</span>
+          </a>
+        </nav>
+      </div>
+
+      <!-- Quick Controls -->
+      <div class="flex items-center gap-2.5">
+        
+        <!-- Audio Chime Toggle -->
+        <button id="chimeBtn" onclick="toggleChime()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-surface-container-high border border-white/5 text-secondary text-xs font-bold transition hover:bg-surface-bright">
+          <span class="material-symbols-outlined text-base" id="chimeIcon">notifications_active</span>
+          <span id="chimeLabel">CHIME ON</span>
+          <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+        </button>
+
+        <!-- Delay SLA Threshold -->
+        <div class="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-surface-container border border-white/5 text-xs">
+          <span class="material-symbols-outlined text-outline text-base">timer</span>
+          <span class="text-outline">Max SLA:</span>
+          <span class="text-primary font-bold">20 mins</span>
+        </div>
+
+        <!-- Add Manual Ticket Button -->
+        <button onclick="openNewTicketModal()" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-primary hover:bg-amber-300 text-slate-950 text-xs font-extrabold shadow-sm transition">
+          <span class="material-symbols-outlined text-base">add_circle</span>
+          <span>Fire KOT</span>
+        </button>
+
+        <!-- Fullscreen Mode -->
+        <button onclick="toggleFullscreen()" class="p-2 rounded-xl bg-surface-container hover:bg-surface-container-high text-slate-300 hover:text-white text-xs" title="Toggle Fullscreen">
+          <span class="material-symbols-outlined text-lg">fullscreen</span>
+        </button>
+
+      </div>
+    </header>
+
+    <!-- CHANNEL FILTER STRIP & STATS RIBBON (INDIAN AGGREGATORS) -->
+    <div class="bg-surface-container-lowest/70 border-b border-white/5 px-4 py-2 flex flex-wrap items-center justify-between gap-3 text-xs">
+      
+      <!-- Channels Selector -->
+      <div class="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0" id="channelFilterGroup">
+        <button onclick="setChannelFilter('all')" data-channel="all" class="channel-btn px-3 py-1.5 rounded-lg bg-primary-container text-slate-950 font-bold flex items-center gap-1.5">
+          <span>All Channels</span>
+          <span class="px-1.5 py-0.2 rounded-full bg-black/20 text-[10px]" id="countAll">8</span>
+        </button>
+        <button onclick="setChannelFilter('pos')" data-channel="pos" class="channel-btn px-3 py-1.5 rounded-lg bg-surface-container hover:bg-surface-bright text-slate-300 flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-tertiary"></span>
+          <span>Dine-in (Petpooja)</span>
+          <span class="text-outline text-[10px]" id="countPos">4</span>
+        </button>
+        <button onclick="setChannelFilter('zomato')" data-channel="zomato" class="channel-btn px-3 py-1.5 rounded-lg bg-surface-container hover:bg-surface-bright text-slate-300 flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-rose-500"></span>
+          <span>Zomato</span>
+          <span class="text-outline text-[10px]" id="countZomato">2</span>
+        </button>
+        <button onclick="setChannelFilter('swiggy')" data-channel="swiggy" class="channel-btn px-3 py-1.5 rounded-lg bg-surface-container hover:bg-surface-bright text-slate-300 flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-orange-400"></span>
+          <span>Swiggy</span>
+          <span class="text-outline text-[10px]" id="countSwiggy">1</span>
+        </button>
+        <button onclick="setChannelFilter('web')" data-channel="web" class="channel-btn px-3 py-1.5 rounded-lg bg-surface-container hover:bg-surface-bright text-slate-300 flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+          <span>Direct / DotPe</span>
+          <span class="text-outline text-[10px]" id="countWeb">1</span>
+        </button>
+      </div>
+
+      <!-- Quick Metrics Telemetry -->
+      <div class="flex items-center gap-4 text-xs font-mono">
+        <div class="flex items-center gap-1.5">
+          <span class="text-outline">ACTIVE TICKETS:</span>
+          <span class="text-white font-bold" id="totalActiveCount">8</span>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <span class="text-outline">AVG TIME:</span>
+          <span class="text-secondary font-bold">11.4m</span>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <span class="text-outline">CRITICAL DELAYS:</span>
+          <span class="text-error font-bold" id="criticalDelayCount">1</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- MAIN KDS BOARD: 3 LANES (PREP, FIRING, READY) -->
+    <main class="flex-1 p-4 grid grid-cols-1 md:grid-cols-3 gap-4 overflow-y-auto">
+      
+      <!-- COLUMN 1: PREP / QUEUED -->
+      <div class="flex flex-col bg-surface-container-lowest/40 rounded-2xl border border-white/5 p-3">
+        <div class="flex items-center justify-between pb-3 mb-3 border-b border-white/5">
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full bg-sky-400"></span>
+            <span class="font-display text-base font-bold text-white">1. In Prep / Queued KOT</span>
+          </div>
+          <span id="colCountPrep" class="px-2 py-0.5 rounded-full bg-sky-500/10 text-sky-300 text-xs font-bold font-mono">3</span>
+        </div>
+        <div id="lanePrep" class="flex-1 space-y-3 overflow-y-auto"></div>
+      </div>
+
+      <!-- COLUMN 2: FIRING / TANDOOR & CURRY -->
+      <div class="flex flex-col bg-surface-container-lowest/40 rounded-2xl border border-white/5 p-3">
+        <div class="flex items-center justify-between pb-3 mb-3 border-b border-white/5">
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full bg-amber-400 animate-pulse"></span>
+            <span class="font-display text-base font-bold text-white">2. Firing / On Tandoor &amp; Sigri</span>
+          </div>
+          <span id="colCountFiring" class="px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-300 text-xs font-bold font-mono">3</span>
+        </div>
+        <div id="laneFiring" class="flex-1 space-y-3 overflow-y-auto"></div>
+      </div>
+
+      <!-- COLUMN 3: READY / EXPO PICKUP -->
+      <div class="flex flex-col bg-surface-container-lowest/40 rounded-2xl border border-white/5 p-3">
+        <div class="flex items-center justify-between pb-3 mb-3 border-b border-white/5">
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full bg-emerald-400"></span>
+            <span class="font-display text-base font-bold text-white">3. Plated / Ready for Service</span>
+          </div>
+          <span id="colCountReady" class="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-300 text-xs font-bold font-mono">2</span>
+        </div>
+        <div id="laneReady" class="flex-1 space-y-3 overflow-y-auto"></div>
+      </div>
+
+    </main>
+
+    <!-- BOTTOM EXPEDITOR BAR & KEYBOARD SHORTCUTS -->
+    <footer class="bg-surface-container-lowest border-t border-white/5 px-4 py-2 flex flex-wrap items-center justify-between text-xs text-outline font-mono">
+      <div class="flex items-center gap-3">
+        <span>STATION 1: CLAY TANDOOR</span>
+        <span>•</span>
+        <span>STATION 2: CURRY LINE</span>
+        <span>•</span>
+        <span>STATION 3: AWADHI DUM</span>
+        <span>•</span>
+        <span>STATION 4: MITHAI LARDER</span>
+      </div>
+      <div class="hidden sm:flex items-center gap-4">
+        <span><kbd class="px-1.5 py-0.5 rounded bg-surface-container text-white">Space</kbd> Bump Top KOT</span>
+        <span><kbd class="px-1.5 py-0.5 rounded bg-surface-container text-white">1-5</kbd> Switch Channel</span>
+        <span><kbd class="px-1.5 py-0.5 rounded bg-surface-container text-white">N</kbd> New KOT</span>
+      </div>
+    </footer>
+
+    <!-- MODAL: MANUAL FIRE TICKET -->
+    <div id="newTicketModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+      <div class="bg-surface-container border border-white/10 rounded-2xl w-full max-w-md p-6 shadow-2xl">
+        <div class="flex items-center justify-between pb-3 border-b border-white/10">
+          <h3 class="font-display text-lg font-bold text-white flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary">restaurant</span>
+            Fire New KOT Ticket
+          </h3>
+          <button onclick="closeNewTicketModal()" class="text-outline hover:text-white">
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </div>
+
+        <form id="newTicketForm" onsubmit="handleCreateTicket(event)" class="mt-4 space-y-3.5 text-xs">
+          <div>
+            <label class="block text-outline font-semibold mb-1 uppercase tracking-wider">Channel &amp; Source</label>
+            <select id="newChannel" class="w-full bg-surface-container-high rounded-xl p-2.5 text-white border border-white/5 focus:ring-1 focus:ring-primary focus:outline-none">
+              <option value="pos">Dine-in POS (Petpooja)</option>
+              <option value="zomato">Zomato Online</option>
+              <option value="swiggy">Swiggy Delivery</option>
+              <option value="web">Direct Web / DotPe</option>
+            </select>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-outline font-semibold mb-1 uppercase tracking-wider">Table / Guest ID</label>
+              <input type="text" id="newTable" required placeholder="Table 14 / Rohan K." class="w-full bg-surface-container-high rounded-xl p-2.5 text-white border border-white/5 focus:ring-1 focus:ring-primary focus:outline-none" />
+            </div>
+            <div>
+              <label class="block text-outline font-semibold mb-1 uppercase tracking-wider">Captain / Steward</label>
+              <input type="text" id="newServer" placeholder="Ramesh S." value="Ramesh S." class="w-full bg-surface-container-high rounded-xl p-2.5 text-white border border-white/5 focus:ring-1 focus:ring-primary focus:outline-none" />
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-outline font-semibold mb-1 uppercase tracking-wider">Dishes &amp; Preparation Instructions</label>
+            <textarea id="newItems" required rows="3" placeholder="2x Slow-Cooked Truffle Dal Makhani (Extra Butter, 3 Garlic Naan)&#10;1x Awadhi Dum Gosht Biryani (Burani Raita side)" class="w-full bg-surface-container-high rounded-xl p-2.5 text-white border border-white/5 focus:ring-1 focus:ring-primary focus:outline-none font-sans"></textarea>
+          </div>
+
+          <div class="pt-3 flex items-center justify-end gap-2.5">
+            <button type="button" onclick="closeNewTicketModal()" class="px-4 py-2 rounded-xl bg-surface-container-high text-slate-300 font-semibold hover:text-white">Cancel</button>
+            <button type="submit" class="px-5 py-2 rounded-xl bg-gradient-to-r from-amber-400 to-primary-container text-slate-950 font-bold shadow-md hover:brightness-110">Fire to KDS</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- TOAST CONTAINER -->
+    <div id="toastContainer" class="fixed bottom-12 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- SCRIPT LOGIC -->
+    <script>
+      let chimeEnabled = true;
+      function playTicketChime(type = 'normal') {
+        if (!chimeEnabled) return;
+        try {
+          const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          
+          if (type === 'urgent') {
+            osc.frequency.setValueAtTime(880, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(1320, audioCtx.currentTime + 0.15);
+            gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.4);
+          } else {
+            osc.frequency.setValueAtTime(587.33, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.1);
+            gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.3);
+          }
+        } catch(e) {
+          console.log(e);
+        }
+      }
+
+      function toggleChime() {
+        chimeEnabled = !chimeEnabled;
+        const icon = document.getElementById('chimeIcon');
+        const label = document.getElementById('chimeLabel');
+        if (chimeEnabled) {
+          icon.textContent = 'notifications_active';
+          label.textContent = 'CHIME ON';
+          showToast('Kitchen sound chimes enabled', 'success');
+        } else {
+          icon.textContent = 'notifications_off';
+          label.textContent = 'CHIME MUTED';
+          showToast('Kitchen sound chimes muted', 'warning');
+        }
+      }
+
+      // Initial Tickets Data (INDIAN RESTAURANT DISHES & CHANNELS)
+      let tickets = [
+        {
+          id: 1024,
+          channel: 'pos',
+          channelName: 'DINE-IN PETPOOJA',
+          table: 'Table 12 · 4 Guests',
+          server: 'Ramesh S. (Captain)',
+          status: 'prep',
+          seconds: 240,
+          items: [
+            { name: '2x Slow-Cooked Truffle Dal Makhani', notes: 'Extra white makhana butter, 3 Garlic Naan' },
+            { name: '1x Awadhi Dum Gosht Biryani', notes: 'Spicy mirchi ka salan, burani raita' },
+            { name: '1x Bhatti Da Smoked Murgh', notes: 'Charred crispy on skewers' }
+          ]
+        },
+        {
+          id: 1025,
+          channel: 'zomato',
+          channelName: 'ZOMATO PRO',
+          table: 'Order #ZOM-489 · Rider At Gate',
+          server: 'Zomato Aggregator',
+          status: 'prep',
+          seconds: 480,
+          items: [
+            { name: '2x Paneer Butter Masala', notes: 'Medium spice level' },
+            { name: '4x Laccha Paratha & Jeera Rice', notes: 'Eco packaging' }
+          ]
+        },
+        {
+          id: 1026,
+          channel: 'web',
+          channelName: 'DIRECT DOTPE',
+          table: 'Car Pickup #2 · Ananya Sharma',
+          server: 'Host Desk',
+          status: 'prep',
+          seconds: 120,
+          items: [
+            { name: '1x Tandoori Salmon Tikka', notes: 'Mint chutney extra' },
+            { name: '1x Saffron Pistachio Kulfi', notes: 'Dry ice pack' }
+          ]
+        },
+        {
+          id: 1021,
+          channel: 'pos',
+          channelName: 'DINE-IN PETPOOJA',
+          table: 'Table 7 (VIP) · 2 Guests',
+          server: 'Chef Vikram M.',
+          status: 'firing',
+          seconds: 860,
+          items: [
+            { name: '2x Smoked Galouti Kebab', notes: 'Saffron sheermal, pickled shallots' },
+            { name: '1x Kashmiri Rogan Josh (Nalli)', notes: 'Rich rogan gravy slow simmered' },
+            { name: '2x Taftan Bread', notes: 'Fresh out of tandoor' }
+          ]
+        },
+        {
+          id: 1022,
+          channel: 'swiggy',
+          channelName: 'SWIGGY GOURMET',
+          table: 'Courier: Sandeep R. (B1 Pickup)',
+          server: 'Online Dispatch',
+          status: 'firing',
+          seconds: 720,
+          items: [
+            { name: '1x Murgh Malai Tikka (8 pcs)', notes: 'Cardamom & cream marination' },
+            { name: '1x Subz Nizami Dum Biryani', notes: 'Sealed clay handi' }
+          ]
+        },
+        {
+          id: 1018,
+          channel: 'pos',
+          channelName: 'DINE-IN PETPOOJA',
+          table: 'Table 18 · Terrace Rush',
+          server: 'Sunil K.',
+          status: 'firing',
+          seconds: 1320, // 22 mins -> OVERDUE CRIMSON
+          items: [
+            { name: '3x Tandoori Jheenga (Jumbo Prawns)', notes: 'Kasundi mustard drizzle' },
+            { name: '2x Kakori Seekh Kebab', notes: 'Melt-in-mouth finish' }
+          ]
+        },
+        {
+          id: 1015,
+          channel: 'pos',
+          channelName: 'DINE-IN PETPOOJA',
+          table: 'Table 4 · 2 Guests',
+          server: 'Ramesh S.',
+          status: 'ready',
+          seconds: 960,
+          items: [
+            { name: '2x Butter Chicken 1950', notes: 'Old Delhi recipe, fenugreek cream' },
+            { name: '1x Truffle Kulcha Trio', notes: 'Hot on heat lamp' }
+          ]
+        },
+        {
+          id: 1016,
+          channel: 'zomato',
+          channelName: 'ZOMATO PRO',
+          table: 'Pickup Shelf #3',
+          server: 'Online Hub',
+          status: 'ready',
+          seconds: 600,
+          items: [
+            { name: '2x Dal Makhani & Rice Bowl', notes: 'Silver sealed boxes' }
+          ]
+        }
+      ];
+
+      let currentChannel = 'all';
+
+      function formatTime(totalSec) {
+        const m = Math.floor(totalSec / 60).toString().padStart(2, '0');
+        const s = (totalSec % 60).toString().padStart(2, '0');
+        return `${m}:${s}`;
+      }
+
+      function renderBoard() {
+        const prepContainer = document.getElementById('lanePrep');
+        const firingContainer = document.getElementById('laneFiring');
+        const readyContainer = document.getElementById('laneReady');
+
+        prepContainer.innerHTML = '';
+        firingContainer.innerHTML = '';
+        readyContainer.innerHTML = '';
+
+        let prepCount = 0;
+        let firingCount = 0;
+        let readyCount = 0;
+        let criticalDelays = 0;
+
+        let posCount = 0, zomatoCount = 0, swiggyCount = 0, webCount = 0;
+
+        tickets.forEach(ticket => {
+          if (ticket.channel === 'pos') posCount++;
+          else if (ticket.channel === 'zomato') zomatoCount++;
+          else if (ticket.channel === 'swiggy') swiggyCount++;
+          else if (ticket.channel === 'web') webCount++;
+
+          if (ticket.seconds >= 1200) criticalDelays++;
+
+          if (currentChannel !== 'all' && ticket.channel !== currentChannel) return;
+
+          if (ticket.status === 'prep') prepCount++;
+          else if (ticket.status === 'firing') firingCount++;
+          else if (ticket.status === 'ready') readyCount++;
+
+          const card = createTicketCard(ticket);
+
+          if (ticket.status === 'prep') prepContainer.appendChild(card);
+          else if (ticket.status === 'firing') firingContainer.appendChild(card);
+          else if (ticket.status === 'ready') readyContainer.appendChild(card);
+        });
+
+        document.getElementById('colCountPrep').textContent = prepCount;
+        document.getElementById('colCountFiring').textContent = firingCount;
+        document.getElementById('colCountReady').textContent = readyCount;
+        document.getElementById('totalActiveCount').textContent = tickets.length;
+        document.getElementById('criticalDelayCount').textContent = criticalDelays;
+
+        document.getElementById('countAll').textContent = tickets.length;
+        document.getElementById('countPos').textContent = posCount;
+        document.getElementById('countZomato').textContent = zomatoCount;
+        document.getElementById('countSwiggy').textContent = swiggyCount;
+        document.getElementById('countWeb').textContent = webCount;
+      }
+
+      function createTicketCard(ticket) {
+        const div = document.createElement('div');
+        
+        let colorClass = 'ticket-green';
+        let timerColor = 'text-emerald-400';
+        if (ticket.seconds >= 1200) {
+          colorClass = 'ticket-crimson';
+          timerColor = 'text-rose-400 font-black animate-delay';
+        } else if (ticket.seconds >= 600) {
+          colorClass = 'ticket-amber';
+          timerColor = 'text-amber-400 font-bold';
+        }
+
+        let channelBadgeColor = 'bg-sky-500/20 text-sky-300 border-sky-500/30';
+        if (ticket.channel === 'zomato') channelBadgeColor = 'bg-rose-500/20 text-rose-300 border-rose-500/30';
+        if (ticket.channel === 'swiggy') channelBadgeColor = 'bg-orange-500/20 text-orange-300 border-orange-500/30';
+        if (ticket.channel === 'web') channelBadgeColor = 'bg-amber-500/20 text-amber-300 border-amber-500/30';
+
+        let nextActionLabel = 'Fire to Station';
+        let nextActionIcon = 'local_fire_department';
+        if (ticket.status === 'firing') {
+          nextActionLabel = 'Mark Plated';
+          nextActionIcon = 'check_circle';
+        } else if (ticket.status === 'ready') {
+          nextActionLabel = 'Dispatch KOT';
+          nextActionIcon = 'send';
+        }
+
+        const itemsHtml = ticket.items.map(i => `
+          <div class="py-1">
+            <div class="font-bold text-white text-xs leading-snug">${i.name}</div>
+            ${i.notes ? `<div class="text-[11px] text-primary italic pl-1 leading-tight">↳ ${i.notes}</div>` : ''}
+          </div>
+        `).join('');
+
+        div.className = `ticket-card ${colorClass} rounded-xl p-3.5 flex flex-col justify-between`;
+        div.innerHTML = `
+          <div>
+            <div class="flex items-center justify-between gap-2 pb-2 border-b border-white/5">
+              <div class="flex items-center gap-2">
+                <span class="font-mono text-base font-extrabold text-white">#${ticket.id}</span>
+                <span class="px-2 py-0.5 rounded border text-[10px] font-bold uppercase tracking-wider ${channelBadgeColor}">${ticket.channelName}</span>
+              </div>
+              <div class="flex items-center gap-1 font-mono text-xs ${timerColor}">
+                <span class="material-symbols-outlined text-sm">schedule</span>
+                <span>${formatTime(ticket.seconds)}</span>
+              </div>
+            </div>
+
+            <div class="py-2 text-xs flex items-center justify-between text-outline">
+              <span class="font-semibold text-slate-200">${ticket.table}</span>
+              <span>${ticket.server}</span>
+            </div>
+
+            <div class="divide-y divide-white/5 py-1">
+              ${itemsHtml}
+            </div>
+          </div>
+
+          <div class="mt-3 pt-2.5 border-t border-white/5 flex items-center justify-between gap-2">
+            <button onclick="voidTicket(${ticket.id})" class="px-2.5 py-1 rounded-lg bg-surface-container-high hover:bg-rose-500/20 hover:text-rose-300 text-outline text-[11px] transition">
+              Void
+            </button>
+            <button onclick="advanceTicket(${ticket.id})" class="flex-1 py-1.5 rounded-lg bg-surface-bright hover:bg-primary hover:text-slate-950 text-white font-bold text-xs transition flex items-center justify-center gap-1.5 shadow-sm">
+              <span class="material-symbols-outlined text-sm">${nextActionIcon}</span>
+              <span>${nextActionLabel}</span>
+            </button>
+          </div>
+        `;
+
+        return div;
+      }
+
+      function advanceTicket(id) {
+        const ticket = tickets.find(t => t.id === id);
+        if (!ticket) return;
+
+        if (ticket.status === 'prep') {
+          ticket.status = 'firing';
+          showToast(`KOT #${id} sent to Tandoor & Curry line`, 'success');
+          playTicketChime('normal');
+        } else if (ticket.status === 'firing') {
+          ticket.status = 'ready';
+          showToast(`KOT #${id} plated & READY on Expedite Counter`, 'success');
+          playTicketChime('normal');
+        } else if (ticket.status === 'ready') {
+          tickets = tickets.filter(t => t.id !== id);
+          showToast(`KOT #${id} served to dining table / rider!`, 'success');
+        }
+        renderBoard();
+      }
+
+      function voidTicket(id) {
+        if (confirm(`Void KOT #${id}?`)) {
+          tickets = tickets.filter(t => t.id !== id);
+          showToast(`KOT #${id} voided in Petpooja POS`, 'warning');
+          renderBoard();
+        }
+      }
+
+      function setChannelFilter(channel) {
+        currentChannel = channel;
+        document.querySelectorAll('.channel-btn').forEach(btn => {
+          if (btn.getAttribute('data-channel') === channel) {
+            btn.className = 'channel-btn px-3 py-1.5 rounded-lg bg-primary-container text-slate-950 font-bold flex items-center gap-1.5';
+          } else {
+            btn.className = 'channel-btn px-3 py-1.5 rounded-lg bg-surface-container hover:bg-surface-bright text-slate-300 flex items-center gap-1.5';
+          }
+        });
+        renderBoard();
+      }
+
+      setInterval(() => {
+        tickets.forEach(ticket => {
+          ticket.seconds++;
+        });
+        renderBoard();
+      }, 1000);
+
+      function openNewTicketModal() { document.getElementById('newTicketModal').classList.remove('hidden'); }
+      function closeNewTicketModal() { document.getElementById('newTicketModal').classList.add('hidden'); }
+
+      function handleCreateTicket(e) {
+        e.preventDefault();
+        const channel = document.getElementById('newChannel').value;
+        const table = document.getElementById('newTable').value;
+        const server = document.getElementById('newServer').value || 'Captain';
+        const itemsRaw = document.getElementById('newItems').value.split('\n').filter(Boolean);
+
+        const items = itemsRaw.map(str => ({ name: str.trim(), notes: '' }));
+        const newId = Math.floor(1000 + Math.random() * 9000);
+        let channelName = 'DINE-IN PETPOOJA';
+        if (channel === 'zomato') channelName = 'ZOMATO PRO';
+        if (channel === 'swiggy') channelName = 'SWIGGY GOURMET';
+        if (channel === 'web') channelName = 'DIRECT DOTPE';
+
+        tickets.unshift({
+          id: newId,
+          channel: channel,
+          channelName: channelName,
+          table: table,
+          server: server,
+          status: 'prep',
+          seconds: 0,
+          items: items
+        });
+
+        closeNewTicketModal();
+        document.getElementById('newTicketForm').reset();
+        showToast(`KOT #${newId} fired to Tandoor queue!`, 'success');
+        playTicketChime('urgent');
+        renderBoard();
+      }
+
+      window.addEventListener('keydown', (e) => {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+        if (e.code === 'Space') {
+          e.preventDefault();
+          const readyTicket = tickets.find(t => t.status === 'ready');
+          if (readyTicket) advanceTicket(readyTicket.id);
+          else {
+            const firingTicket = tickets.find(t => t.status === 'firing');
+            if (firingTicket) advanceTicket(firingTicket.id);
+          }
+        }
+        if (e.key === 'n' || e.key === 'N') openNewTicketModal();
+        if (e.key === '1') setChannelFilter('all');
+        if (e.key === '2') setChannelFilter('pos');
+        if (e.key === '3') setChannelFilter('zomato');
+        if (e.key === '4') setChannelFilter('swiggy');
+        if (e.key === '5') setChannelFilter('web');
+      });
+
+      function toggleFullscreen() {
+        if (!document.fullscreenElement) {
+          document.documentElement.requestFullscreen().catch(e => console.log(e));
+        } else {
+          document.exitFullscreen();
+        }
+      }
+
+      renderBoard();
+
+      function showToast(message, type = 'success') {
+        const container = document.getElementById('toastContainer');
+        const toast = document.createElement('div');
+        const colorClass = type === 'success' ? 'border-emerald-500/40 text-emerald-300' :
+                           type === 'warning' ? 'border-amber-500/40 text-amber-300' : 'border-sky-500/40 text-sky-300';
+        
+        toast.className = `p-3 rounded-xl bg-surface-container-high/95 backdrop-blur-md border ${colorClass} shadow-xl text-xs font-semibold flex items-center gap-2 pointer-events-auto transform transition-all duration-300 translate-y-3 opacity-0`;
+        toast.innerHTML = `
+          <span class="material-symbols-outlined text-base">${type === 'success' ? 'check_circle' : 'info'}</span>
+          <span>${message}</span>
+        `;
+        container.appendChild(toast);
+
+        setTimeout(() => toast.classList.remove('translate-y-3', 'opacity-0'), 10);
+        setTimeout(() => {
+          toast.classList.add('translate-y-3', 'opacity-0');
+          setTimeout(() => toast.remove(), 300);
+        }, 3000);
+      }
+    </script>
+  </body>
+</html>
